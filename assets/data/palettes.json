@@ -1,0 +1,722 @@
+[
+  {
+    "paletteId": "palette1",
+    "paletteName": "Light",
+    "colorHex": {
+      "1": "FF0000",
+      "2": "00FF00",
+      "3": "0000FF",
+      "4": "FFA500",
+      "5": 800080,
+      "6": "FFFF00"
+    }
+  },
+  {
+    "paletteId": "palette2",
+    "paletteName": "Friend",
+    "colorHex": {
+      "1": "cc0000",
+      "2": "f1c232",
+      "3": "6aa84f",
+      "4": "3c78d8",
+      "5": "674ea7",
+      "6": "b45f06"
+    }
+  },
+  {
+    "paletteId": "palette3",
+    "paletteName": "Love",
+    "colorHex": {
+      "1": "ea9999",
+      "2": "ffe599",
+      "3": "b6d7a8",
+      "4": "a4c2f4",
+      "5": "b4a7d6",
+      "6": "f9cb9c"
+    }
+  },
+  {
+    "paletteId": "palette4",
+    "paletteName": "Pleasure",
+    "colorHex": {
+      "1": "ff6478",
+      "2": "FFDA66",
+      "3": " 66FF86",
+      "4": "667EFF",
+      "5": "F081FF",
+      "6": "FFA654"
+    }
+  },
+  {
+    "paletteId": "palette5",
+    "paletteName": "Strange",
+    "colorHex": {
+      "1": "0015ff",
+      "2": "ff00a1",
+      "3": "90fe00",
+      "4": "8400ff",
+      "5": "00fff7",
+      "6": "ff7300"
+    }
+  },
+  {
+    "paletteId": "palette6",
+    "paletteName": "Depression",
+    "colorHex": {
+      "1": "e63946",
+      "2": "ec9a9a",
+      "3": "f1faee",
+      "4": "a8dadc",
+      "5": "457b9d",
+      "6": "1d3557"
+    }
+  },
+  {
+    "paletteId": "palette7",
+    "paletteName": "Hope",
+    "colorHex": {
+      "1": "ff99c8",
+      "2": "fec8c3",
+      "3": "fcf6bd",
+      "4": "d0f4de",
+      "5": "a9def9",
+      "6": "e4c1f9"
+    }
+  },
+  {
+    "paletteId": "palette8",
+    "paletteName": "Festival",
+    "colorHex": {
+      "1": "FF0000",
+      "2": "FFFF00",
+      "3": "00FF00",
+      "4": "00ffff",
+      "5": "0000ff",
+      "6": "ff00ff"
+    }
+  },
+  {
+    "paletteId": "palette9",
+    "paletteName": "Umbrella",
+    "colorHex": {
+      "1": "cd001a",
+      "2": "ef6a00",
+      "3": "f2cd00",
+      "4": "79c300",
+      "5": "1961ae",
+      "6": "61007d"
+    }
+  },
+  {
+    "paletteId": "palette10",
+    "paletteName": "Cotton",
+    "colorHex": {
+      "1": "ff9aa2",
+      "2": "ffb7b2",
+      "3": "ffdac1",
+      "4": "e2f0cb",
+      "5": "b5ead7",
+      "6": "c7ceea"
+    }
+  },
+  {
+    "paletteId": "palette11",
+    "paletteName": "Prosperity",
+    "colorHex": {
+      "1": "23362b",
+      "2": "1bb28c",
+      "3": "e86a58",
+      "4": "fed45b",
+      "5": "9bc7c5",
+      "6": "efeeea"
+    }
+  },
+  {
+    "paletteId": "palette12",
+    "paletteName": "Nostalgia",
+    "colorHex": {
+      "1": "0cc06c",
+      "2": "ffe619",
+      "3": "471f71",
+      "4": "ef819b",
+      "5": "59c6f2",
+      "6": "fffad2"
+    }
+  },
+  {
+    "paletteId": "palette13",
+    "paletteName": "Camping",
+    "colorHex": {
+      "1": "a43283",
+      "2": "68b02b",
+      "3": "cd4014",
+      "4": "ecd20a",
+      "5": "fff9da",
+      "6": "8d6f61"
+    }
+  },
+  {
+    "paletteId": "palette14",
+    "paletteName": "Dust",
+    "colorHex": {
+      "1": "edd8bb",
+      "2": "deb8ad",
+      "3": "a46d87",
+      "4": "9c7da1",
+      "5": "b79ebc",
+      "6": "aaaab6"
+    }
+  },
+  {
+    "paletteId": "palette15",
+    "paletteName": "Cyberpunk",
+    "colorHex": {
+      "1": "f72585",
+      "2": "b5179e",
+      "3": "7209b7",
+      "4": "3a0ca3",
+      "5": "4361ee",
+      "6": "4cc9f0"
+    }
+  },
+  {
+    "paletteId": "palette16",
+    "paletteName": "Disappointment",
+    "colorHex": {
+      "1": "ffcdb2",
+      "2": "ffb4a2",
+      "3": "e5989b",
+      "4": "b5838d",
+      "5": "8a8691",
+      "6": "6d6875"
+    }
+  },
+  {
+    "paletteId": "palette17",
+    "paletteName": "Moss",
+    "colorHex": {
+      "1": "cad2c5",
+      "2": "a7bea9",
+      "3": "84a98c",
+      "4": "52796f",
+      "5": "354f52",
+      "6": "2f3e46"
+    }
+  },
+  {
+    "paletteId": "palette18",
+    "paletteName": "Tree",
+    "colorHex": {
+      "1": "a76f24",
+      "2": "eec666",
+      "3": "ee3532",
+      "4": 731013,
+      "5": "57681f",
+      "6": 313819
+    }
+  },
+  {
+    "paletteId": "palette19",
+    "paletteName": "Candy",
+    "colorHex": {
+      "1": "cdb4db",
+      "2": "e6bedc",
+      "3": "ffc8dd",
+      "4": "ffafcc",
+      "5": "bde0fe",
+      "6": "a2d2ff"
+    }
+  },
+  {
+    "paletteId": "palette20",
+    "paletteName": "Cowboy",
+    "colorHex": {
+      "1": "606c38",
+      "2": 283618,
+      "3": "93987c",
+      "4": "fefae0",
+      "5": "dda15e",
+      "6": "bc6c25"
+    }
+  },
+  {
+    "paletteId": "palette21",
+    "paletteName": "Playground",
+    "colorHex": {
+      "1": "0d3082",
+      "2": "88dae7",
+      "3": "76cd65",
+      "4": "ffc247",
+      "5": "ff8133",
+      "6": "eb5133"
+    }
+  },
+  {
+    "paletteId": "palette22",
+    "paletteName": "Moon",
+    "colorHex": {
+      "1": "302b20",
+      "2": 616154,
+      "3": "9ba28f",
+      "4": "ecdcf4",
+      "5": "d9b6db",
+      "6": "a38e98"
+    }
+  },
+  {
+    "paletteId": "palette23",
+    "paletteName": "Dream",
+    "colorHex": {
+      "1": "cce1f2",
+      "2": "c6f8e5",
+      "3": "fbf7d5",
+      "4": "f9ded7",
+      "5": "f5cdde",
+      "6": "e2bef1"
+    }
+  },
+  {
+    "paletteId": "palette24",
+    "paletteName": "Pain",
+    "colorHex": {
+      "1": "e3dbd3",
+      "2": "9cb2a5",
+      "3": "8ba4b3",
+      "4": "c8b7c9",
+      "5": "9d7982",
+      "6": 733236
+    }
+  },
+  {
+    "paletteId": "palette25",
+    "paletteName": "Antique",
+    "colorHex": {
+      "1": "c9cba3",
+      "2": "ffe1a8",
+      "3": 858935,
+      "4": "723d46",
+      "5": "8e646b",
+      "6": "a58389"
+    }
+  },
+  {
+    "paletteId": "palette26",
+    "paletteName": "Breezy",
+    "colorHex": {
+      "1": "0d3b66",
+      "2": "1a67a5",
+      "3": "73d6ee",
+      "4": "b8ffc6",
+      "5": "2dc48d",
+      "6": "1b7b3d"
+    }
+  },
+  {
+    "paletteId": "palette27",
+    "paletteName": "Remembrance",
+    "colorHex": {
+      "1": "a36361",
+      "2": "d3a29d",
+      "3": "e8b298",
+      "4": "eecc8c",
+      "5": "bdd1c5",
+      "6": "9eaba2"
+    }
+  },
+  {
+    "paletteId": "palette28",
+    "paletteName": "Ocean",
+    "colorHex": {
+      "1": "03045e",
+      "2": "023e8a",
+      "3": "0077b6",
+      "4": "00b4d8",
+      "5": "90e0ef",
+      "6": "caf0f8"
+    }
+  },
+  {
+    "paletteId": "palette29",
+    "paletteName": "Sprout",
+    "colorHex": {
+      "1": "0b3319",
+      "2": "15751e",
+      "3": "39a325",
+      "4": "79e230",
+      "5": "c0ff35",
+      "6": "f9fba5"
+    }
+  },
+  {
+    "paletteId": "palette30",
+    "paletteName": "Lonesomeness",
+    "colorHex": {
+      "1": "cb997e",
+      "2": "ddbea9",
+      "3": "ffe8d6",
+      "4": "b7b7a4",
+      "5": "a5a58d",
+      "6": "b7b7a4"
+    }
+  },
+  {
+    "paletteId": "palette31",
+    "paletteName": "Cute",
+    "colorHex": {
+      "1": "f6d97c",
+      "2": "f3c995",
+      "3": "f0baae",
+      "4": "ecaac6",
+      "5": "e99bdf",
+      "6": "e68bf8"
+    }
+  },
+  {
+    "paletteId": "palette32",
+    "paletteName": "Christmas",
+    "colorHex": {
+      "1": "4aa022",
+      "2": "dc2b34",
+      "3": "5bce68",
+      "4": "8fcb27",
+      "5": "ea0c20",
+      "6": "8f230e"
+    }
+  },
+  {
+    "paletteId": "palette33",
+    "paletteName": "Beach",
+    "colorHex": {
+      "1": "003da5",
+      "2": "0052e0",
+      "3": "1f71ff",
+      "4": "ff8200",
+      "5": "ff9c33",
+      "6": "ffa647"
+    }
+  },
+  {
+    "paletteId": "palette34",
+    "paletteName": "Mermaid",
+    "colorHex": {
+      "1": "5a77d8",
+      "2": "81b1fb",
+      "3": "c3dbfd",
+      "4": "ff5db6",
+      "5": "fe86c8",
+      "6": "ffc0db"
+    }
+  },
+  {
+    "paletteId": "palette35",
+    "paletteName": "Lava",
+    "colorHex": {
+      "1": "d00000",
+      "2": "dc2f02",
+      "3": "e85d04",
+      "4": "f48c06",
+      "5": "faa307",
+      "6": "ffba08"
+    }
+  },
+  {
+    "paletteId": "palette36",
+    "paletteName": "Lavender",
+    "colorHex": {
+      "1": "887caf",
+      "2": "9688c0",
+      "3": "a596d3",
+      "4": "b6a5e8",
+      "5": "c8b6ff",
+      "6": "cdbdff"
+    }
+  },
+  {
+    "paletteId": "palette37",
+    "paletteName": "Soil",
+    "colorHex": {
+      "1": "6c5d4e",
+      "2": "826a48",
+      "3": "ae8853",
+      "4": "9d684b",
+      "5": "9d956c",
+      "6": "cbb874"
+    }
+  },
+  {
+    "paletteId": "palette38",
+    "paletteName": "Lemon",
+    "colorHex": {
+      "1": "fff8d6",
+      "2": "fff0ad",
+      "3": "ffe985",
+      "4": "ffdd47",
+      "5": "ffd61f",
+      "6": "ffd100"
+    }
+  },
+  {
+    "paletteId": "palette39",
+    "paletteName": "Camellia",
+    "colorHex": {
+      "1": "e05c6f",
+      "2": "f70123",
+      "3": "8e0003",
+      "4": "18300f",
+      "5": 405628,
+      "6": "aed3d8"
+    }
+  },
+  {
+    "paletteId": "palette40",
+    "paletteName": "Petal",
+    "colorHex": {
+      "1": "ce6a85",
+      "2": "d57d95",
+      "3": "db90a4",
+      "4": "e1a3b3",
+      "5": "e7b5c2",
+      "6": "f3dae1"
+    }
+  },
+  {
+    "paletteId": "palette41",
+    "paletteName": "Foundation",
+    "colorHex": {
+      "1": "ede0d4",
+      "2": "e6ccb2",
+      "3": "ddb892",
+      "4": "b08968",
+      "5": "7f5539",
+      "6": "9c6644"
+    }
+  },
+  {
+    "paletteId": "palette42",
+    "paletteName": "Seaweed",
+    "colorHex": {
+      "1": "e9f5db",
+      "2": "cfe1b9",
+      "3": "b5c99a",
+      "4": "97a97c",
+      "5": "87986a",
+      "6": 718355
+    }
+  },
+  {
+    "paletteId": "palette43",
+    "paletteName": "Sunday",
+    "colorHex": {
+      "1": "e8d1c5",
+      "2": "eddcd2",
+      "3": "fff1e6",
+      "4": "f0efeb",
+      "5": "eeddd3",
+      "6": "edede8"
+    }
+  },
+  {
+    "paletteId": "palette44",
+    "paletteName": "March",
+    "colorHex": {
+      "1": "f47068",
+      "2": "ffb3ae",
+      "3": "fff4f1",
+      "4": "1697a6",
+      "5": "0e606b",
+      "6": "ffc24b"
+    }
+  },
+  {
+    "paletteId": "palette45",
+    "paletteName": "Expression",
+    "colorHex": {
+      "1": "ff5883",
+      "2": "ff91ad",
+      "3": "fec9d7",
+      "4": "b9eee1",
+      "5": "79d3be",
+      "6": "39b89a"
+    }
+  },
+  {
+    "paletteId": "palette46",
+    "paletteName": "April",
+    "colorHex": {
+      "1": "f055a5",
+      "2": "fabe37",
+      "3": "ccd537",
+      "4": "7a88fe",
+      "5": "ff9b28",
+      "6": "bfdff3"
+    }
+  },
+  {
+    "paletteId": "palette47",
+    "paletteName": "Citypop",
+    "colorHex": {
+      "1": "250e2c",
+      "2": "837ab6",
+      "3": "9d85b6",
+      "4": "cc8db3",
+      "5": "f6a5c0",
+      "6": "f7c2ca"
+    }
+  },
+  {
+    "paletteId": "palette48",
+    "paletteName": "Passion",
+    "colorHex": {
+      "1": "eb5e28",
+      "2": "f9a03f",
+      "3": "f3c053",
+      "4": "a1c349",
+      "5": "87a330",
+      "6": "6a8532"
+    }
+  },
+  {
+    "paletteId": "palette49",
+    "paletteName": "Bee",
+    "colorHex": {
+      "1": "e0bb00",
+      "2": "fffcf0",
+      "3": "fff6c7",
+      "4": "ffdd33",
+      "5": "e0bb00",
+      "6": "1a1500"
+    }
+  },
+  {
+    "paletteId": "palette50",
+    "paletteName": "Trust",
+    "colorHex": {
+      "1": "738fbd",
+      "2": "a8c3d4",
+      "3": "dbd6df",
+      "4": "eec6c7",
+      "5": "db88a4",
+      "6": "cc8eb1"
+    }
+  },
+  {
+    "paletteId": "palette51",
+    "paletteName": "Recycling",
+    "colorHex": {
+      "1": 264653,
+      "2": "2a9d8f",
+      "3": "8ab17d",
+      "4": "e9c46a",
+      "5": "f4a261",
+      "6": "e76f51"
+    }
+  },
+  {
+    "paletteId": "palette52",
+    "paletteName": "September",
+    "colorHex": {
+      "1": "335c67",
+      "2": "99a88c",
+      "3": "fff3b0",
+      "4": "e09f3e",
+      "5": "9e2a2b",
+      "6": "540b0e"
+    }
+  },
+  {
+    "paletteId": "palette53",
+    "paletteName": "Shark",
+    "colorHex": {
+      "1": "00b9bf",
+      "2": "05a7b4",
+      "3": "0a95a9",
+      "4": "0f849d",
+      "5": 147292,
+      "6": 196087
+    }
+  },
+  {
+    "paletteId": "palette54",
+    "paletteName": "Kid",
+    "colorHex": {
+      "1": "0cb2af",
+      "2": "a1c65d",
+      "3": "fac723",
+      "4": "f29222",
+      "5": "e95e50",
+      "6": "936fac"
+    }
+  },
+  {
+    "paletteId": "palette55",
+    "paletteName": "Radioactivity",
+    "colorHex": {
+      "1": 883388,
+      "2": "725c7b",
+      "3": "5c846f",
+      "4": "46ad62",
+      "5": "30d556",
+      "6": "1afe49"
+    }
+  },
+  {
+    "paletteId": "palette56",
+    "paletteName": "Grass",
+    "colorHex": {
+      "1": "e3e902",
+      "2": "ccd904",
+      "3": "b5c806",
+      "4": "9eb708",
+      "5": "87a70a",
+      "6": "70960c"
+    }
+  },
+  {
+    "paletteId": "palette57",
+    "paletteName": "Sunset",
+    "colorHex": {
+      "1": "ff7b00",
+      "2": "ff9500",
+      "3": "ffaa00",
+      "4": "ffc300",
+      "5": "ffdd00",
+      "6": "ffec17"
+    }
+  },
+  {
+    "paletteId": "palette58",
+    "paletteName": "October",
+    "colorHex": {
+      "1": 923514,
+      "2": "d15515",
+      "3": "fc9143",
+      "4": "ffc057",
+      "5": "8f8854",
+      "6": 474834
+    }
+  },
+  {
+    "paletteId": "palette59",
+    "paletteName": "Memory",
+    "colorHex": {
+      "1": "2d150a",
+      "2": "51321b",
+      "3": "82624e",
+      "4": "a58a72",
+      "5": "b8a68e",
+      "6": "7b6e5b"
+    }
+  },
+  {
+    "paletteId": "palette60",
+    "paletteName": "Shyness",
+    "colorHex": {
+      "1": "d45e5e",
+      "2": "f08080",
+      "3": "f4978e",
+      "4": "f8ad9d",
+      "5": "fbc4ab",
+      "6": "ffdab9"
+    }
+  }
+]
