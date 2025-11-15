@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231316845473",
+    "project_id": "colorflood-1f8f0",
+    "storage_bucket": "colorflood-1f8f0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231316845473:android:5a14b0e7f0b488c30111e0",
+        "android_client_info": {
+          "package_name": "com.example.colorflood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL3OCg95216qyp1RHKGcAsm1YhZI8rA9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
