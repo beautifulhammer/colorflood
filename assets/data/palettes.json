@@ -1,19 +1,27 @@
 [
   {
     "paletteId": "palette1",
-    "paletteName": "Light",
+    "paletteName": {
+      "en": "Light",
+      "ko": "빛",
+      "cn": "光"
+    },
     "colorHex": {
       "1": "FF0000",
       "2": "00FF00",
       "3": "0000FF",
       "4": "FFA500",
-      "5": 800080,
+      "5": "800080",
       "6": "FFFF00"
     }
   },
   {
     "paletteId": "palette2",
-    "paletteName": "Friend",
+    "paletteName": {
+      "en": "Friend",
+      "ko": "친구",
+      "cn": "友"
+    },
     "colorHex": {
       "1": "cc0000",
       "2": "f1c232",
@@ -25,7 +33,11 @@
   },
   {
     "paletteId": "palette3",
-    "paletteName": "Love",
+    "paletteName": {
+      "en": "Love",
+      "ko": "사랑",
+      "cn": "爱"
+    },
     "colorHex": {
       "1": "ea9999",
       "2": "ffe599",
@@ -37,11 +49,15 @@
   },
   {
     "paletteId": "palette4",
-    "paletteName": "Pleasure",
+    "paletteName": {
+      "en": "Pleasure",
+      "ko": "기쁨",
+      "cn": "喜"
+    },
     "colorHex": {
       "1": "ff6478",
       "2": "FFDA66",
-      "3": " 66FF86",
+      "3": "66FF86",
       "4": "667EFF",
       "5": "F081FF",
       "6": "FFA654"
@@ -49,7 +65,11 @@
   },
   {
     "paletteId": "palette5",
-    "paletteName": "Strange",
+    "paletteName": {
+      "en": "Strange",
+      "ko": "이상한",
+      "cn": "异"
+    },
     "colorHex": {
       "1": "0015ff",
       "2": "ff00a1",
@@ -61,7 +81,11 @@
   },
   {
     "paletteId": "palette6",
-    "paletteName": "Depression",
+    "paletteName": {
+      "en": "Depression",
+      "ko": "우울",
+      "cn": "郁"
+    },
     "colorHex": {
       "1": "e63946",
       "2": "ec9a9a",
@@ -73,7 +97,11 @@
   },
   {
     "paletteId": "palette7",
-    "paletteName": "Hope",
+    "paletteName": {
+      "en": "Hope",
+      "ko": "희망",
+      "cn": "希"
+    },
     "colorHex": {
       "1": "ff99c8",
       "2": "fec8c3",
@@ -85,7 +113,11 @@
   },
   {
     "paletteId": "palette8",
-    "paletteName": "Festival",
+    "paletteName": {
+      "en": "Festival",
+      "ko": "축제",
+      "cn": "节"
+    },
     "colorHex": {
       "1": "FF0000",
       "2": "FFFF00",
@@ -97,7 +129,11 @@
   },
   {
     "paletteId": "palette9",
-    "paletteName": "Umbrella",
+    "paletteName": {
+      "en": "Umbrella",
+      "ko": "우산",
+      "cn": "伞"
+    },
     "colorHex": {
       "1": "cd001a",
       "2": "ef6a00",
@@ -109,7 +145,11 @@
   },
   {
     "paletteId": "palette10",
-    "paletteName": "Cotton",
+    "paletteName": {
+      "en": "Cotton",
+      "ko": "코튼",
+      "cn": "棉"
+    },
     "colorHex": {
       "1": "ff9aa2",
       "2": "ffb7b2",
@@ -121,7 +161,11 @@
   },
   {
     "paletteId": "palette11",
-    "paletteName": "Prosperity",
+    "paletteName": {
+      "en": "Prosperity",
+      "ko": "번영",
+      "cn": "荣"
+    },
     "colorHex": {
       "1": "23362b",
       "2": "1bb28c",
@@ -133,7 +177,11 @@
   },
   {
     "paletteId": "palette12",
-    "paletteName": "Nostalgia",
+    "paletteName": {
+      "en": "Nostalgia",
+      "ko": "노스텔지아",
+      "cn": "旧"
+    },
     "colorHex": {
       "1": "0cc06c",
       "2": "ffe619",
@@ -145,7 +193,11 @@
   },
   {
     "paletteId": "palette13",
-    "paletteName": "Camping",
+    "paletteName": {
+      "en": "Camping",
+      "ko": "캠핑",
+      "cn": "营"
+    },
     "colorHex": {
       "1": "a43283",
       "2": "68b02b",
@@ -157,7 +209,11 @@
   },
   {
     "paletteId": "palette14",
-    "paletteName": "Dust",
+    "paletteName": {
+      "en": "Dust",
+      "ko": "먼지",
+      "cn": "尘"
+    },
     "colorHex": {
       "1": "edd8bb",
       "2": "deb8ad",
@@ -169,7 +225,11 @@
   },
   {
     "paletteId": "palette15",
-    "paletteName": "Cyberpunk",
+    "paletteName": {
+      "en": "Cyberpunk",
+      "ko": "사이버펑크",
+      "cn": "赛博"
+    },
     "colorHex": {
       "1": "f72585",
       "2": "b5179e",
@@ -181,7 +241,11 @@
   },
   {
     "paletteId": "palette16",
-    "paletteName": "Disappointment",
+    "paletteName": {
+      "en": "Disappointment",
+      "ko": "실망",
+      "cn": "失"
+    },
     "colorHex": {
       "1": "ffcdb2",
       "2": "ffb4a2",
@@ -193,7 +257,11 @@
   },
   {
     "paletteId": "palette17",
-    "paletteName": "Moss",
+    "paletteName": {
+      "en": "Moss",
+      "ko": "이끼",
+      "cn": "苔"
+    },
     "colorHex": {
       "1": "cad2c5",
       "2": "a7bea9",
@@ -205,19 +273,27 @@
   },
   {
     "paletteId": "palette18",
-    "paletteName": "Tree",
+    "paletteName": {
+      "en": "Tree",
+      "ko": "나무",
+      "cn": "树"
+    },
     "colorHex": {
       "1": "a76f24",
       "2": "eec666",
       "3": "ee3532",
-      "4": 731013,
+      "4": "731013",
       "5": "57681f",
-      "6": 313819
+      "6": "313819"
     }
   },
   {
     "paletteId": "palette19",
-    "paletteName": "Candy",
+    "paletteName": {
+      "en": "Candy",
+      "ko": "사탕",
+      "cn": "糖"
+    },
     "colorHex": {
       "1": "cdb4db",
       "2": "e6bedc",
@@ -229,10 +305,14 @@
   },
   {
     "paletteId": "palette20",
-    "paletteName": "Cowboy",
+    "paletteName": {
+      "en": "Cowboy",
+      "ko": "카우보이",
+      "cn": "牛仔"
+    },
     "colorHex": {
       "1": "606c38",
-      "2": 283618,
+      "2": "283618",
       "3": "93987c",
       "4": "fefae0",
       "5": "dda15e",
@@ -241,7 +321,11 @@
   },
   {
     "paletteId": "palette21",
-    "paletteName": "Playground",
+    "paletteName": {
+      "en": "Playground",
+      "ko": "놀이터",
+      "cn": "乐园"
+    },
     "colorHex": {
       "1": "0d3082",
       "2": "88dae7",
@@ -253,10 +337,14 @@
   },
   {
     "paletteId": "palette22",
-    "paletteName": "Moon",
+    "paletteName": {
+      "en": "Moon",
+      "ko": "달",
+      "cn": "月"
+    },
     "colorHex": {
       "1": "302b20",
-      "2": 616154,
+      "2": "616154",
       "3": "9ba28f",
       "4": "ecdcf4",
       "5": "d9b6db",
@@ -265,7 +353,11 @@
   },
   {
     "paletteId": "palette23",
-    "paletteName": "Dream",
+    "paletteName": {
+      "en": "Dream",
+      "ko": "꿈",
+      "cn": "梦"
+    },
     "colorHex": {
       "1": "cce1f2",
       "2": "c6f8e5",
@@ -277,23 +369,31 @@
   },
   {
     "paletteId": "palette24",
-    "paletteName": "Pain",
+    "paletteName": {
+      "en": "Pain",
+      "ko": "고통",
+      "cn": "痛"
+    },
     "colorHex": {
       "1": "e3dbd3",
       "2": "9cb2a5",
       "3": "8ba4b3",
       "4": "c8b7c9",
       "5": "9d7982",
-      "6": 733236
+      "6": "733236"
     }
   },
   {
     "paletteId": "palette25",
-    "paletteName": "Antique",
+    "paletteName": {
+      "en": "Antique",
+      "ko": "골동품",
+      "cn": "古"
+    },
     "colorHex": {
       "1": "c9cba3",
       "2": "ffe1a8",
-      "3": 858935,
+      "3": "858935",
       "4": "723d46",
       "5": "8e646b",
       "6": "a58389"
@@ -301,7 +401,11 @@
   },
   {
     "paletteId": "palette26",
-    "paletteName": "Breezy",
+    "paletteName": {
+      "en": "Breezy",
+      "ko": "산들바람",
+      "cn": "风"
+    },
     "colorHex": {
       "1": "0d3b66",
       "2": "1a67a5",
@@ -313,7 +417,11 @@
   },
   {
     "paletteId": "palette27",
-    "paletteName": "Remembrance",
+    "paletteName": {
+      "en": "Remembrance",
+      "ko": "기억",
+      "cn": "忆"
+    },
     "colorHex": {
       "1": "a36361",
       "2": "d3a29d",
@@ -325,7 +433,11 @@
   },
   {
     "paletteId": "palette28",
-    "paletteName": "Ocean",
+    "paletteName": {
+      "en": "Ocean",
+      "ko": "바다",
+      "cn": "海"
+    },
     "colorHex": {
       "1": "03045e",
       "2": "023e8a",
@@ -337,7 +449,11 @@
   },
   {
     "paletteId": "palette29",
-    "paletteName": "Sprout",
+    "paletteName": {
+      "en": "Sprout",
+      "ko": "새싹",
+      "cn": "芽"
+    },
     "colorHex": {
       "1": "0b3319",
       "2": "15751e",
@@ -349,7 +465,11 @@
   },
   {
     "paletteId": "palette30",
-    "paletteName": "Lonesomeness",
+    "paletteName": {
+      "en": "Lonesomeness",
+      "ko": "외로움",
+      "cn": "寂"
+    },
     "colorHex": {
       "1": "cb997e",
       "2": "ddbea9",
@@ -361,7 +481,11 @@
   },
   {
     "paletteId": "palette31",
-    "paletteName": "Cute",
+    "paletteName": {
+      "en": "Cute",
+      "ko": "귀여운",
+      "cn": "萌"
+    },
     "colorHex": {
       "1": "f6d97c",
       "2": "f3c995",
@@ -373,7 +497,11 @@
   },
   {
     "paletteId": "palette32",
-    "paletteName": "Christmas",
+    "paletteName": {
+      "en": "Christmas",
+      "ko": "크리스마스",
+      "cn": "圣诞"
+    },
     "colorHex": {
       "1": "4aa022",
       "2": "dc2b34",
@@ -385,7 +513,11 @@
   },
   {
     "paletteId": "palette33",
-    "paletteName": "Beach",
+    "paletteName": {
+      "en": "Beach",
+      "ko": "해변",
+      "cn": "海滩"
+    },
     "colorHex": {
       "1": "003da5",
       "2": "0052e0",
@@ -397,7 +529,11 @@
   },
   {
     "paletteId": "palette34",
-    "paletteName": "Mermaid",
+    "paletteName": {
+      "en": "Mermaid",
+      "ko": "인어",
+      "cn": "美人鱼"
+    },
     "colorHex": {
       "1": "5a77d8",
       "2": "81b1fb",
@@ -409,7 +545,11 @@
   },
   {
     "paletteId": "palette35",
-    "paletteName": "Lava",
+    "paletteName": {
+      "en": "Lava",
+      "ko": "용암",
+      "cn": "岩浆"
+    },
     "colorHex": {
       "1": "d00000",
       "2": "dc2f02",
@@ -421,7 +561,11 @@
   },
   {
     "paletteId": "palette36",
-    "paletteName": "Lavender",
+    "paletteName": {
+      "en": "Lavender",
+      "ko": "라벤더",
+      "cn": "薰衣"
+    },
     "colorHex": {
       "1": "887caf",
       "2": "9688c0",
@@ -433,7 +577,11 @@
   },
   {
     "paletteId": "palette37",
-    "paletteName": "Soil",
+    "paletteName": {
+      "en": "Soil",
+      "ko": "흙",
+      "cn": "土"
+    },
     "colorHex": {
       "1": "6c5d4e",
       "2": "826a48",
@@ -445,7 +593,11 @@
   },
   {
     "paletteId": "palette38",
-    "paletteName": "Lemon",
+    "paletteName": {
+      "en": "Lemon",
+      "ko": "레몬",
+      "cn": "柠"
+    },
     "colorHex": {
       "1": "fff8d6",
       "2": "fff0ad",
@@ -457,19 +609,27 @@
   },
   {
     "paletteId": "palette39",
-    "paletteName": "Camellia",
+    "paletteName": {
+      "en": "Camellia",
+      "ko": "동백꽃",
+      "cn": "山茶"
+    },
     "colorHex": {
       "1": "e05c6f",
       "2": "f70123",
       "3": "8e0003",
       "4": "18300f",
-      "5": 405628,
+      "5": "405628",
       "6": "aed3d8"
     }
   },
   {
     "paletteId": "palette40",
-    "paletteName": "Petal",
+    "paletteName": {
+      "en": "Petal",
+      "ko": "꽃잎",
+      "cn": "花瓣"
+    },
     "colorHex": {
       "1": "ce6a85",
       "2": "d57d95",
@@ -481,7 +641,11 @@
   },
   {
     "paletteId": "palette41",
-    "paletteName": "Foundation",
+    "paletteName": {
+      "en": "Foundation",
+      "ko": "파운데이션",
+      "cn": "基"
+    },
     "colorHex": {
       "1": "ede0d4",
       "2": "e6ccb2",
@@ -493,19 +657,27 @@
   },
   {
     "paletteId": "palette42",
-    "paletteName": "Seaweed",
+    "paletteName": {
+      "en": "Seaweed",
+      "ko": "해초",
+      "cn": "海藻"
+    },
     "colorHex": {
       "1": "e9f5db",
       "2": "cfe1b9",
       "3": "b5c99a",
       "4": "97a97c",
       "5": "87986a",
-      "6": 718355
+      "6": "718355"
     }
   },
   {
     "paletteId": "palette43",
-    "paletteName": "Sunday",
+    "paletteName": {
+      "en": "Sunday",
+      "ko": "일요일",
+      "cn": "周日"
+    },
     "colorHex": {
       "1": "e8d1c5",
       "2": "eddcd2",
@@ -517,7 +689,11 @@
   },
   {
     "paletteId": "palette44",
-    "paletteName": "March",
+    "paletteName": {
+      "en": "March",
+      "ko": "3월",
+      "cn": "三月"
+    },
     "colorHex": {
       "1": "f47068",
       "2": "ffb3ae",
@@ -529,7 +705,11 @@
   },
   {
     "paletteId": "palette45",
-    "paletteName": "Expression",
+    "paletteName": {
+      "en": "Expression",
+      "ko": "표현",
+      "cn": "表情"
+    },
     "colorHex": {
       "1": "ff5883",
       "2": "ff91ad",
@@ -541,7 +721,11 @@
   },
   {
     "paletteId": "palette46",
-    "paletteName": "April",
+    "paletteName": {
+      "en": "April",
+      "ko": "4월",
+      "cn": "四月"
+    },
     "colorHex": {
       "1": "f055a5",
       "2": "fabe37",
@@ -553,7 +737,11 @@
   },
   {
     "paletteId": "palette47",
-    "paletteName": "Citypop",
+    "paletteName": {
+      "en": "Citypop",
+      "ko": "시티팝",
+      "cn": "都市"
+    },
     "colorHex": {
       "1": "250e2c",
       "2": "837ab6",
@@ -565,7 +753,11 @@
   },
   {
     "paletteId": "palette48",
-    "paletteName": "Passion",
+    "paletteName": {
+      "en": "Passion",
+      "ko": "정열",
+      "cn": "热情"
+    },
     "colorHex": {
       "1": "eb5e28",
       "2": "f9a03f",
@@ -577,7 +769,11 @@
   },
   {
     "paletteId": "palette49",
-    "paletteName": "Bee",
+    "paletteName": {
+      "en": "Bee",
+      "ko": "꿀벌",
+      "cn": "蜂"
+    },
     "colorHex": {
       "1": "e0bb00",
       "2": "fffcf0",
@@ -589,7 +785,11 @@
   },
   {
     "paletteId": "palette50",
-    "paletteName": "Trust",
+    "paletteName": {
+      "en": "Trust",
+      "ko": "신뢰",
+      "cn": "信"
+    },
     "colorHex": {
       "1": "738fbd",
       "2": "a8c3d4",
@@ -601,9 +801,13 @@
   },
   {
     "paletteId": "palette51",
-    "paletteName": "Recycling",
+    "paletteName": {
+      "en": "Recycling",
+      "ko": "재활용",
+      "cn": "循环"
+    },
     "colorHex": {
-      "1": 264653,
+      "1": "264653",
       "2": "2a9d8f",
       "3": "8ab17d",
       "4": "e9c46a",
@@ -613,7 +817,11 @@
   },
   {
     "paletteId": "palette52",
-    "paletteName": "September",
+    "paletteName": {
+      "en": "September",
+      "ko": "9월",
+      "cn": "九月"
+    },
     "colorHex": {
       "1": "335c67",
       "2": "99a88c",
@@ -625,19 +833,27 @@
   },
   {
     "paletteId": "palette53",
-    "paletteName": "Shark",
+    "paletteName": {
+      "en": "Shark",
+      "ko": "상어",
+      "cn": "鲨"
+    },
     "colorHex": {
       "1": "00b9bf",
       "2": "05a7b4",
       "3": "0a95a9",
       "4": "0f849d",
-      "5": 147292,
-      "6": 196087
+      "5": "147292",
+      "6": "196087"
     }
   },
   {
     "paletteId": "palette54",
-    "paletteName": "Kid",
+    "paletteName": {
+      "en": "Kid",
+      "ko": "아이",
+      "cn": "童"
+    },
     "colorHex": {
       "1": "0cb2af",
       "2": "a1c65d",
@@ -649,9 +865,13 @@
   },
   {
     "paletteId": "palette55",
-    "paletteName": "Radioactivity",
+    "paletteName": {
+      "en": "Radioactivity",
+      "ko": "방사능",
+      "cn": "辐射"
+    },
     "colorHex": {
-      "1": 883388,
+      "1": "883388",
       "2": "725c7b",
       "3": "5c846f",
       "4": "46ad62",
@@ -661,7 +881,11 @@
   },
   {
     "paletteId": "palette56",
-    "paletteName": "Grass",
+    "paletteName": {
+      "en": "Grass",
+      "ko": "잔디",
+      "cn": "草"
+    },
     "colorHex": {
       "1": "e3e902",
       "2": "ccd904",
@@ -673,7 +897,11 @@
   },
   {
     "paletteId": "palette57",
-    "paletteName": "Sunset",
+    "paletteName": {
+      "en": "Sunset",
+      "ko": "일몰",
+      "cn": "夕阳"
+    },
     "colorHex": {
       "1": "ff7b00",
       "2": "ff9500",
@@ -685,19 +913,27 @@
   },
   {
     "paletteId": "palette58",
-    "paletteName": "October",
+    "paletteName": {
+      "en": "October",
+      "ko": "10월",
+      "cn": "十月"
+    },
     "colorHex": {
-      "1": 923514,
+      "1": "923514",
       "2": "d15515",
       "3": "fc9143",
       "4": "ffc057",
       "5": "8f8854",
-      "6": 474834
+      "6": "474834"
     }
   },
   {
     "paletteId": "palette59",
-    "paletteName": "Memory",
+    "paletteName": {
+      "en": "Memory",
+      "ko": "추억",
+      "cn": "回忆"
+    },
     "colorHex": {
       "1": "2d150a",
       "2": "51321b",
@@ -709,7 +945,11 @@
   },
   {
     "paletteId": "palette60",
-    "paletteName": "Shyness",
+    "paletteName": {
+      "en": "Shyness",
+      "ko": "수줍음",
+      "cn": "害羞"
+    },
     "colorHex": {
       "1": "d45e5e",
       "2": "f08080",
