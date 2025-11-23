@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'firebase_options.dart';
+import 'home/home_screen.dart';
 
 void main() async {
   // Flutter와 Firebase를 연결하기 전에 필요한 준비 코드
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Anonymous Login Demo',
+      title: 'Color Flood',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
@@ -88,34 +89,7 @@ class _AuthInitializerState extends State<AuthInitializer> {
       );
     }
 
-    // 익명 로그인 성공 후 진입할 실제 홈 화면
-    return const MyHomePage();
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('익명 로그인 완료'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Firebase 익명 로그인에 성공했습니다.'),
-            const SizedBox(height: 16),
-            Text('현재 유저 UID: ${user?.uid ?? "없음"}'),
-            const SizedBox(height: 16),
-            const Text('이 상태에서 Color Flood 개발을 시작하면 돼요 ✨'),
-          ],
-        ),
-      ),
-    );
+    // 익명 로그인 성공 후 진입할 실제 홈 화면 (UI 전용 파일)
+    return const HomeScreen();
   }
 }
