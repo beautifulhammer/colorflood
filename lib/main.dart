@@ -3,13 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'firebase_options.dart';
+import 'data/user_data.dart';
+import 'data/user_data_repository.dart';
 import 'home/home_screen.dart';
 
 void main() async {
-  // Flutter와 Firebase를 연결하기 전에 필요한 준비 코드
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Firebase 초기화 (firebase_options.dart에서 설정값 가져옴)
+  // Firebase 초기화
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,7 +34,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// 앱 실행 시 가장 먼저 익명 로그인을 수행하는 위젯
+/// 앱 실행 시:
+/// 1) 익명 로그인
+/// 2) Firestore 에 users/{uid} 문서를 loadOrCreate 로 생성/로드
+/// 3) HomeScreen 으로 UserData 전달
 class AuthInitializer extends StatefulWidget {
   const AuthInitializer({super.key});
 
@@ -44,27 +48,40 @@ class AuthInitializer extends StatefulWidget {
 class _AuthInitializerState extends State<AuthInitializer> {
   bool _isLoading = true;
   String? _errorMessage;
+  UserData? _userData;
 
   @override
   void initState() {
     super.initState();
-    _signInAnonymously();
+    _initAuthAndUser();
   }
 
-  Future<void> _signInAnonymously() async {
+  Future<void> _initAuthAndUser() async {
     try {
-      // 이미 로그인되어 있으면 새로 로그인할 필요 없음
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) {
-        await FirebaseAuth.instance.signInAnonymously();
+      final auth = FirebaseAuth.instance;
+
+      // 1) 익명 로그인 (이미 로그인돼 있으면 패스)
+      if (auth.currentUser == null) {
+        await auth.signInAnonymously();
       }
+      final uid = auth.currentUser!.uid;
+
+      // 2) Firestore users/{uid} loadOrCreate
+      final repo = UserDataRepository.instance;
+      // TODO: 실제로는 디바이스/설정의 언어코드를 defaultLanguageCode 로 넣어도 됨
+      final userData = await repo.loadOrCreateUser(
+        uid: uid,
+        defaultLanguageCode: 'en',
+      );
+
       setState(() {
+        _userData = userData;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _isLoading = false;
         _errorMessage = e.toString();
+        _isLoading = false;
       });
     }
   }
@@ -72,7 +89,6 @@ class _AuthInitializerState extends State<AuthInitializer> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      // 익명 로그인 진행 중 UI
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -80,16 +96,17 @@ class _AuthInitializerState extends State<AuthInitializer> {
       );
     }
 
-    if (_errorMessage != null) {
-      // 에러가 난 경우 간단히 메시지 표시
+    if (_errorMessage != null || _userData == null) {
       return Scaffold(
         body: Center(
-          child: Text('로그인 중 오류 발생:\n$_errorMessage'),
+          child: Text('초기화 중 오류 발생:\n$_errorMessage'),
         ),
       );
     }
 
-    // 익명 로그인 성공 후 진입할 실제 홈 화면 (UI 전용 파일)
-    return const HomeScreen();
+    // 3) 초기 UserData 를 들고 홈 화면으로 진입
+    return HomeScreen(
+      userData: _userData!,
+    );
   }
 }

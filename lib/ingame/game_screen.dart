@@ -2,13 +2,15 @@
 
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../data/game_data_loader.dart';
 import '../data/palette_model.dart';
 import '../data/stage_model.dart';
 import '../data/gold_reward_table.dart';
-import '../data/player_gold_repository.dart';
+import '../data/user_data.dart';
+import '../data/user_data_repository.dart';
 import 'widgets/game_board.dart';
 import 'widgets/color_buttons_row.dart';
 import 'result/clear_result_overlay.dart';
@@ -24,7 +26,8 @@ enum GameResultState {
 /// - stageNum 을 받아 해당 스테이지 정보를 로드
 /// - 팔레트 + 난이도 + boardSize 정보를 기반으로 보드를 그림
 /// - 게임 종료 시 전면 결과 팝업(성공/실패)을 오버레이로 표시
-/// - 스테이지 클리어 시 난이도에 따른 골드 보상 지급
+/// - 스테이지 클리어 시 난이도에 따른 골드 보상 지급 (Firestore 저장)
+/// - 완료한 최고 스테이지, 골드, 언어코드는 Firestore users/{uid} 문서에 저장
 class GameScreen extends StatefulWidget {
   final int stageNum;
 
@@ -52,10 +55,12 @@ class _GameScreenState extends State<GameScreen> {
   /// 이번 스테이지에서 획득한 골드 (클리어 시에만 사용)
   int _earnedGold = 0;
 
-  /// 플레이어의 전체 보유 골드 (SharedPreferences 에서 로드)
-  int _currentGold = 0;
+  /// Firestore 에서 로드한 유저 데이터
+  UserData? _userData;
 
   final Random _random = Random();
+
+  final _userRepo = UserDataRepository.instance;
 
   @override
   void initState() {
@@ -63,7 +68,7 @@ class _GameScreenState extends State<GameScreen> {
     _initGame(initialStageNum: widget.stageNum);
   }
 
-  /// 스테이지 데이터를 읽고, 팔레트/보드/카운트/골드 초기화
+  /// 스테이지 / 팔레트 / 유저 데이터 로딩 및 초기화
   Future<void> _initGame({int? initialStageNum}) async {
     setState(() {
       _isLoading = true;
@@ -73,6 +78,20 @@ class _GameScreenState extends State<GameScreen> {
     });
 
     try {
+      // FirebaseAuth 에서 현재 유저 uid 가져오기
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('User is not signed in.');
+      }
+      final uid = user.uid;
+
+      // 유저 데이터 Firestore 에서 로드 (없으면 생성)
+      // TODO: 실제 앱 설정에서 선택한 언어 코드로 defaultLanguageCode 넘겨주면 됨.
+      final userData = await _userRepo.loadOrCreateUser(
+        uid: uid,
+        defaultLanguageCode: 'en',
+      );
+
       // 스테이지 / 팔레트 데이터 로딩
       await GameDataLoader.loadAll();
 
@@ -89,13 +108,10 @@ class _GameScreenState extends State<GameScreen> {
         throw Exception('Palette not found: ${stage.paletteId}');
       }
 
-      // 플레이어 현재 골드 로딩
-      final currentGold = await PlayerGoldRepository.getGold();
-
       _stage = stage;
       _palette = palette;
+      _userData = userData;
       _remainingMoves = stage.maxMoves;
-      _currentGold = currentGold;
 
       _generateBoard(stage.boardSize, palette.colors.length);
 
@@ -145,7 +161,7 @@ class _GameScreenState extends State<GameScreen> {
 
     // 클리어 체크
     if (_isAllSameColor()) {
-      _handleClear(); // async 이지만 여기서는 fire-and-forget
+      _handleClear(); // async (await 안 해도 됨)
       return;
     }
 
@@ -189,27 +205,37 @@ class _GameScreenState extends State<GameScreen> {
 
   /// 스테이지 클리어 처리
   /// - 난이도 기반 골드 보상 계산
-  /// - PlayerGoldRepository 를 통해 영구 저장
-  /// - 클리어 전면 팝업에 이번 보상 골드 전달
+  /// - Firestore users/{uid} 에 clearedStage / gold 반영
+  /// - 이번 스테이지에서 획득한 골드는 _earnedGold 에 저장
   Future<void> _handleClear() async {
     final stage = _stage;
-    if (stage == null) return;
+    final userData = _userData;
+    if (stage == null || userData == null) return;
 
     // 난이도 기반 골드 보상 계산
-    final difficulty = stage.difficulty; // StageData에 difficulty 필드가 있다고 가정
-    final reward =
-    GoldRewardTable.getRewardByDifficulty(difficulty); // 0~6 골드
+    final difficulty = stage.difficulty; // stage_data.json 의 difficulty 값
+    final reward = GoldRewardTable.getRewardByDifficulty(difficulty);
 
-    // 보유 골드 증가 및 저장
-    final newTotalGold = await PlayerGoldRepository.addGold(reward);
+    try {
+      // Firestore 에 진행도 + 골드 반영
+      final updated = await _userRepo.updateOnClear(
+        current: userData,
+        clearedStage: stage.stageNum,
+        deltaGold: reward,
+      );
 
-    setState(() {
-      _earnedGold = reward; // 이번 스테이지에서 얻은 골드
-      _currentGold = newTotalGold; // 전체 보유 골드
-      _resultState = GameResultState.clear;
-    });
-
-    // TODO: 여기서 스테이지 진행도 저장(마지막 클리어 스테이지 번호 등)도 연동 가능
+      setState(() {
+        _earnedGold = reward; // 이번 스테이지에서 얻은 골드
+        _userData = updated;  // 전체 유저 데이터 갱신
+        _resultState = GameResultState.clear;
+      });
+    } catch (e) {
+      // 만약 Firestore 업데이트가 실패하면, 결과 팝업 대신 에러 표시
+      setState(() {
+        _errorMessage = '클리어 저장 중 오류 발생: $e';
+        _resultState = GameResultState.none;
+      });
+    }
   }
 
   /// 게임오버 처리 (골드 지급 없음)
@@ -242,7 +268,6 @@ class _GameScreenState extends State<GameScreen> {
   /// - 추후 아이템 구매 / RV 연동 포인트
   void _continueGame() {
     // TODO: 아이템 구매 팝업 또는 RV 시청 유도 팝업 연동
-    // 일단은 팝업만 닫고, 남은 Moves 는 0인 상태로 둠
     setState(() {
       _resultState = GameResultState.none;
     });
@@ -292,7 +317,7 @@ class _GameScreenState extends State<GameScreen> {
       );
     }
 
-    // 결과 팝업이 떠 있을 때는 AppBar 자체를 숨기기 (전면 가리개 느낌)
+    // 결과 팝업이 떠 있을 때는 AppBar 숨기기 (전면 가리개 느낌)
     final bool showAppBar = _resultState == GameResultState.none;
 
     return Scaffold(
@@ -308,7 +333,7 @@ class _GameScreenState extends State<GameScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // TODO: 설정 팝업
+              // TODO: 설정 팝업 (여기서 언어 변경 + UserDataRepository.updateLanguage 호출 가능)
             },
             icon: const Icon(Icons.settings_outlined),
           ),
