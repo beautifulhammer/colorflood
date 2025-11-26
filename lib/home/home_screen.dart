@@ -151,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     return Scaffold(
+      backgroundColor: const Color(0xFFd9d9d9),
       body: SafeArea(
         child: Column(
           children: [
@@ -211,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 180),
 
             // 중앙 컨텐츠 (스크롤 필요 없을 정도라 Column 로)
             Expanded(
@@ -253,19 +254,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 80),
 
                     // 팔레트 미리보기 (다음 스테이지 팔레트)
                     Column(
                       children: [
-                        const Text(
-                          'Next Palette',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(6, (index) {
@@ -274,10 +267,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 index < _nextPaletteColors!.length)
                                 ? _nextPaletteColors![index]
                                 : Colors.grey.shade300;
-
                             return Container(
-                              width: 20,
-                              height: 20,
+                              width: 40,
+                              height: 40,
                               margin:
                               const EdgeInsets.symmetric(horizontal: 4),
                               decoration: BoxDecoration(
