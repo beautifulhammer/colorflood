@@ -321,9 +321,14 @@ class _GameScreenState extends State<GameScreen> {
     final bool showAppBar = _resultState == GameResultState.none;
 
     return Scaffold(
+      backgroundColor: const Color(0xFF232323),
       appBar: showAppBar
           ? AppBar(
-        title: Text('Stage ${stage.stageNum}'),
+        backgroundColor: const Color(0xFF232323),
+        title: Text(
+            'Stage ${stage.stageNum}',
+            style: const TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.home),
           onPressed: () {
@@ -367,6 +372,7 @@ class _GameScreenState extends State<GameScreen> {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       Row(
@@ -378,6 +384,7 @@ class _GameScreenState extends State<GameScreen> {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -406,7 +413,7 @@ class _GameScreenState extends State<GameScreen> {
 
                 // 색상 버튼 행
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
+                  padding: const EdgeInsets.only(bottom: 60.0),
                   child: ColorButtonsRow(
                     colors: palette.colors,
                     onColorSelected: _onColorSelected,

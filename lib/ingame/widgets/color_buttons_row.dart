@@ -1,10 +1,10 @@
+// lib/ingame/widgets/color_buttons_row.dart
+
 import 'package:flutter/material.dart';
 
-/// 하단 색상 버튼 6개를 세로로 나란히 배치하는 위젯
-/// [onColorSelected] 로 어떤 색 인덱스를 선택했는지 콜백
-class ColorButtonsRow extends StatelessWidget {
+class ColorButtonsRow extends StatefulWidget {
   final List<Color> colors;
-  final ValueChanged<int> onColorSelected;
+  final Function(int) onColorSelected;
 
   const ColorButtonsRow({
     super.key,
@@ -13,30 +13,59 @@ class ColorButtonsRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    if (colors.isEmpty) {
-      return const SizedBox.shrink();
-    }
+  State<ColorButtonsRow> createState() => _ColorButtonsRowState();
+}
 
+class _ColorButtonsRowState extends State<ColorButtonsRow> {
+  /// 각 버튼의 눌림 상태를 저장 (6개 색 버튼)
+  final List<bool> _pressed = List.filled(6, false);
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(colors.length, (index) {
-        final color = colors[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-          child: GestureDetector(
-            onTap: () => onColorSelected(index),
+      children: List.generate(widget.colors.length, (index) {
+        final color = widget.colors[index];
+
+        return GestureDetector(
+          onTapDown: (_) {
+            setState(() => _pressed[index] = true);
+          },
+          onTapUp: (_) {
+            setState(() => _pressed[index] = false);
+          },
+          onTapCancel: () {
+            setState(() => _pressed[index] = false);
+          },
+          onTap: () {
+            widget.onColorSelected(index);
+          },
+
+          child: AnimatedScale(
+            scale: _pressed[index] ? 0.90 : 1.0,
+            duration: const Duration(milliseconds: 70),
+            curve: Curves.easeOut,
+
             child: Container(
-              width: 40,
-              height: 40,
+              width: 46,
+              height: 46,
+
               decoration: BoxDecoration(
                 color: color,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black.withOpacity(0.2),
-                  width: 1,
-                ),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey, width: 0.2),
+
+                /// 그림자 그대로 유지
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.25),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  )
+                ],
               ),
+
+              margin: const EdgeInsets.symmetric(horizontal: 6),
             ),
           ),
         );
