@@ -29,3 +29,4 @@ flutter:
   assets:
     - assets/data/palettes.json
     - assets/data/stage_data.json
+    - assets/image/gold.png

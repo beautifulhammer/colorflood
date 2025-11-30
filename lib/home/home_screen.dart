@@ -6,6 +6,7 @@ import '../data/game_data_loader.dart';
 import '../data/palette_model.dart';
 import '../data/stage_model.dart';
 import '../ingame/game_screen.dart';
+import '../data/gold_indicator.dart'; // ✅ 골드 표시 공용 함수
 
 /// Color Flood 메인 홈 화면
 ///
@@ -80,18 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// 다음에 플레이할 스테이지의 팔레트 색상 불러오기
-  ///
-  /// - stage_data.json 에서 stageNum 기반 스테이지 찾기
-  /// - 해당 스테이지의 paletteId 로 palettes.json 에서 팔레트 찾기
-  /// - Palette.colors (List<Color>) 를 _nextPaletteColors 에 저장
   Future<void> _loadNextStagePalette(int stageNum) async {
     try {
-      // 공용 로더: 여러 번 호출해도 내부에서 캐시를 사용할 것으로 가정
       await GameDataLoader.loadAll();
 
       final StageData? stage = GameDataLoader.getStage(stageNum);
       if (stage == null) {
-        // 지정된 스테이지가 없으면 팔레트 표시를 비워둔다
         setState(() {
           _nextPaletteColors = null;
         });
@@ -110,7 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _nextPaletteColors = palette!.colors;
       });
     } catch (_) {
-      // 로딩 에러 시에도 크래시 대신 placeholder 유지
       setState(() {
         _nextPaletteColors = null;
       });
@@ -126,8 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    // 게임을 하고 돌아오면, Firestore 에서 유저 데이터 다시 가져와서
-    // 골드/클리어 스테이지 갱신 + 팔레트 갱신
+    // 게임을 하고 돌아오면 유저 데이터 다시 갱신
     await _refreshUserData();
   }
 
@@ -153,17 +146,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF232323),
-      // ✅ 빈 AppBar: 노치/상단 영역 확보용 (아이콘 없음)
+      // ✅ 빈 AppBar: 노치/상단 영역 확보용
       appBar: AppBar(
         backgroundColor: const Color(0xFF232323),
         elevation: 0,
-        automaticallyImplyLeading: false, // 뒤로가기 아이콘 제거
-        // title, actions, leading 모두 비움 → 완전 빈 AppBar
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // ✅ 이제 아이콘/골드는 body 상단에만 노출
+            // 상단 골드 + 아이콘 영역
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -172,28 +164,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // 좌측: 골드 표시
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.circle,
-                        size: 18,
-                        color: Colors.amber,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${_userData.gold}', // 새 유저는 0
-                        style: goldTextStyle,
-                      ),
-                      if (_isRefreshing) ...[
-                        const SizedBox(width: 8),
-                        const SizedBox(
-                          width: 14,
-                          height: 14,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      ],
-                    ],
+                  // 좌측: 골드 표시 (공용 함수 사용)
+                  buildGoldIndicator(
+                    gold: _userData.gold,
+                    isRefreshing: _isRefreshing,
+                    iconSize: 20,
+                    textStyle: goldTextStyle,
                   ),
 
                   // 우측: 도감 / 도움말 / 설정 아이콘
@@ -273,13 +249,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 80),
 
-                    // 팔레트 미리보기 (다음 스테이지 팔레트)
+                    // 팔레트 미리보기
                     Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(6, (index) {
-                            // _nextPaletteColors 가 null 이거나 부족하면 그 칸은 회색
                             final color =
                             (_nextPaletteColors != null &&
                                 index < _nextPaletteColors!.length)
