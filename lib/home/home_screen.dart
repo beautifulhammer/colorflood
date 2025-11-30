@@ -9,8 +9,8 @@ import '../ingame/game_screen.dart';
 
 /// Color Flood 메인 홈 화면
 ///
-/// - 좌측 상단: 골드 표시 (새 유저는 0부터)
-/// - 우측 상단: 도감 / 도움말 / 설정 버튼 (동작은 TODO)
+/// - (빈 AppBar: 노치 영역 확보용)
+/// - body 상단: 골드 / 도감 / 도움말 / 설정 버튼
 /// - 중앙: START 버튼 (다음 스테이지로 게임 시작)
 /// - START 하단: 다음 스테이지에서 사용할 팔레트 미리보기
 /// - 하단: 배너 광고 영역(플레이스홀더)
@@ -102,12 +102,12 @@ class _HomeScreenState extends State<HomeScreen> {
       if (palette == null) {
         setState(() {
           _nextPaletteColors = null;
+          return;
         });
-        return;
       }
 
       setState(() {
-        _nextPaletteColors = palette.colors;
+        _nextPaletteColors = palette!.colors;
       });
     } catch (_) {
       // 로딩 에러 시에도 크래시 대신 placeholder 유지
@@ -148,14 +148,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final goldTextStyle = const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w700,
+      color: Colors.white,
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFd9d9d9),
+      backgroundColor: const Color(0xFF232323),
+      // ✅ 빈 AppBar: 노치/상단 영역 확보용 (아이콘 없음)
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF232323),
+        elevation: 0,
+        automaticallyImplyLeading: false, // 뒤로가기 아이콘 제거
+        // title, actions, leading 모두 비움 → 완전 빈 AppBar
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            // 상단 바: 좌측 골드, 우측 아이콘들
+            // ✅ 이제 아이콘/골드는 body 상단에만 노출
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -193,17 +201,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       IconButton(
                         onPressed: _onTapPaletteBook,
-                        icon: const Icon(Icons.palette_outlined),
+                        icon: const Icon(
+                          Icons.palette_outlined,
+                          color: Colors.white,
+                        ),
                         tooltip: '팔레트 도감',
                       ),
                       IconButton(
                         onPressed: _onTapHelp,
-                        icon: const Icon(Icons.help_outline),
+                        icon: const Icon(
+                          Icons.help_outline,
+                          color: Colors.white,
+                        ),
                         tooltip: '도움말',
                       ),
                       IconButton(
                         onPressed: _onTapSettings,
-                        icon: const Icon(Icons.settings_outlined),
+                        icon: const Icon(
+                          Icons.settings_outlined,
+                          color: Colors.white,
+                        ),
                         tooltip: '설정',
                       ),
                     ],
@@ -214,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 180),
 
-            // 중앙 컨텐츠 (스크롤 필요 없을 정도라 Column 로)
+            // 중앙 컨텐츠
             Expanded(
               child: Center(
                 child: Column(
@@ -263,7 +280,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(6, (index) {
                             // _nextPaletteColors 가 null 이거나 부족하면 그 칸은 회색
-                            final color = (_nextPaletteColors != null &&
+                            final color =
+                            (_nextPaletteColors != null &&
                                 index < _nextPaletteColors!.length)
                                 ? _nextPaletteColors![index]
                                 : Colors.grey.shade300;

@@ -53,7 +53,6 @@ class _ColorButtonsRowState extends State<ColorButtonsRow> {
               decoration: BoxDecoration(
                 color: color,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey, width: 0.2),
 
                 /// 그림자 그대로 유지
                 boxShadow: [
@@ -65,7 +64,7 @@ class _ColorButtonsRowState extends State<ColorButtonsRow> {
                 ],
               ),
 
-              margin: const EdgeInsets.symmetric(horizontal: 6),
+              margin: const EdgeInsets.symmetric(horizontal: 12),
             ),
           ),
         );

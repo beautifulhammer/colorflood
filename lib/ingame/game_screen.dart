@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:confetti/confetti.dart'; // 🎉 confetti 패키지
 
 import '../data/game_data_loader.dart';
 import '../data/palette_model.dart';
@@ -15,6 +16,8 @@ import 'widgets/game_board.dart';
 import 'widgets/color_buttons_row.dart';
 import 'result/clear_result_overlay.dart';
 import 'result/game_over_result_overlay.dart';
+import 'logic/board_utils.dart';
+import 'widgets/clear_confetti_widget.dart'; // ✅ 클리어 파티클 위젯 분리
 
 enum GameResultState {
   none,
@@ -41,6 +44,9 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  /// 클리어 팝업 표시 전 딜레이 (사용자 요청: 200ms)
+  static const Duration _clearDelay = Duration(milliseconds: 200);
+
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -52,6 +58,9 @@ class _GameScreenState extends State<GameScreen> {
 
   GameResultState _resultState = GameResultState.none;
 
+  /// 클리어 결과를 보여주기 전, 잠깐 대기 중인지 여부
+  bool _isResultPending = false;
+
   /// 이번 스테이지에서 획득한 골드 (클리어 시에만 사용)
   int _earnedGold = 0;
 
@@ -59,13 +68,24 @@ class _GameScreenState extends State<GameScreen> {
   UserData? _userData;
 
   final Random _random = Random();
-
   final _userRepo = UserDataRepository.instance;
+
+  /// 🎉 클리어 시 사용할 컨페티 컨트롤러
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     super.initState();
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
     _initGame(initialStageNum: widget.stageNum);
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
   }
 
   /// 스테이지 / 팔레트 / 유저 데이터 로딩 및 초기화
@@ -75,6 +95,7 @@ class _GameScreenState extends State<GameScreen> {
       _errorMessage = null;
       _resultState = GameResultState.none;
       _earnedGold = 0;
+      _isResultPending = false;
     });
 
     try {
@@ -113,7 +134,11 @@ class _GameScreenState extends State<GameScreen> {
       _userData = userData;
       _remainingMoves = stage.maxMoves;
 
-      _generateBoard(stage.boardSize, palette.colors.length);
+      _board = BoardUtils.generateRandomBoard(
+        size: stage.boardSize,
+        colorCount: palette.colors.length,
+        random: _random,
+      );
 
       setState(() {
         _isLoading = false;
@@ -126,23 +151,12 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-  /// 임시로 랜덤 보드 생성
-  /// (나중에 실제 퍼즐 데이터/규칙 기반으로 교체 가능)
-  void _generateBoard(int size, int colorCount) {
-    _board = List.generate(
-      size,
-          (_) => List.generate(
-        size,
-            (_) => _random.nextInt(colorCount),
-      ),
-    );
-  }
-
   /// 색상 버튼을 눌렀을 때 Flood Fill 로직
   void _onColorSelected(int newColorIndex) {
     if (_palette == null || _stage == null) return;
     if (_remainingMoves <= 0) return;
     if (_resultState != GameResultState.none) return;
+    if (_isResultPending) return; // 결과 딜레이 중에는 입력 막기
 
     final size = _board.length;
     if (size == 0) return;
@@ -157,11 +171,31 @@ class _GameScreenState extends State<GameScreen> {
       _remainingMoves--;
     });
 
-    _floodFill(0, 0, currentColor, newColorIndex);
+    BoardUtils.floodFill(
+      board: _board,
+      row: 0,
+      col: 0,
+      targetColor: currentColor,
+      newColor: newColorIndex,
+    );
 
     // 클리어 체크
-    if (_isAllSameColor()) {
-      _handleClear(); // async (await 안 해도 됨)
+    if (BoardUtils.isAllSameColor(_board)) {
+      // 보드는 바로 완성 상태로 보여주고,
+      // 잠깐 딜레이 후에 클리어 팝업 표시
+      setState(() {
+        _isResultPending = true;
+      });
+
+      Future.delayed(_clearDelay, () {
+        if (!mounted) return;
+        // 그 사이에 재시작/홈 이동 등으로 상태가 바뀌었으면 취소
+        if (_resultState != GameResultState.none) return;
+        if (!_isResultPending) return;
+
+        _handleClear();
+      });
+
       return;
     }
 
@@ -169,38 +203,6 @@ class _GameScreenState extends State<GameScreen> {
     if (_remainingMoves <= 0) {
       _handleGameOver();
     }
-  }
-
-  /// DFS 방식 Flood Fill
-  void _floodFill(
-      int row,
-      int col,
-      int targetColor,
-      int newColor,
-      ) {
-    final size = _board.length;
-    if (row < 0 || row >= size || col < 0 || col >= size) return;
-    if (_board[row][col] != targetColor) return;
-    if (targetColor == newColor) return;
-
-    _board[row][col] = newColor;
-
-    _floodFill(row - 1, col, targetColor, newColor);
-    _floodFill(row + 1, col, targetColor, newColor);
-    _floodFill(row, col - 1, targetColor, newColor);
-    _floodFill(row, col + 1, targetColor, newColor);
-  }
-
-  bool _isAllSameColor() {
-    final size = _board.length;
-    if (size == 0) return false;
-    final color = _board[0][0];
-    for (int r = 0; r < size; r++) {
-      for (int c = 0; c < size; c++) {
-        if (_board[r][c] != color) return false;
-      }
-    }
-    return true;
   }
 
   /// 스테이지 클리어 처리
@@ -226,14 +228,19 @@ class _GameScreenState extends State<GameScreen> {
 
       setState(() {
         _earnedGold = reward; // 이번 스테이지에서 얻은 골드
-        _userData = updated;  // 전체 유저 데이터 갱신
+        _userData = updated; // 전체 유저 데이터 갱신
         _resultState = GameResultState.clear;
+        _isResultPending = false;
       });
+
+      // 🎉 클리어 순간 컨페티 발사
+      _confettiController.play();
     } catch (e) {
       // 만약 Firestore 업데이트가 실패하면, 결과 팝업 대신 에러 표시
       setState(() {
         _errorMessage = '클리어 저장 중 오류 발생: $e';
         _resultState = GameResultState.none;
+        _isResultPending = false;
       });
     }
   }
@@ -243,6 +250,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _earnedGold = 0;
       _resultState = GameResultState.gameOver;
+      _isResultPending = false;
     });
   }
 
@@ -270,8 +278,150 @@ class _GameScreenState extends State<GameScreen> {
     // TODO: 아이템 구매 팝업 또는 RV 시청 유도 팝업 연동
     setState(() {
       _resultState = GameResultState.none;
+      _isResultPending = false;
     });
   }
+
+  // -----------------------------
+  // UI 빌더 헬퍼
+  // -----------------------------
+
+  /// AppBar
+  /// - 노치 영역 확보용
+  /// - 버튼 없음 + 뒤로가기 자동 제거
+  PreferredSizeWidget? _buildAppBar(bool showAppBar) {
+    if (!showAppBar) return null;
+    return AppBar(
+      backgroundColor: const Color(0xFF232323),
+      elevation: 0,
+      automaticallyImplyLeading: false, // 뒤로가기 화살표 제거
+    );
+  }
+
+  /// 상단 HUD: 스테이지 + 남은 카운트 (중앙 세로 정렬)
+  Widget _buildHeader(StageData stage) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Stage ${stage.stageNum}',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.bolt_outlined, size: 20, color: Colors.white),
+              const SizedBox(width: 6),
+              Text(
+                '$_remainingMoves / ${stage.maxMoves}',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 보드 영역
+  Widget _buildBoard(Palette palette) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 8.0,
+        ),
+        child: GameBoard(
+          board: _board,
+          colors: palette.colors,
+        ),
+      ),
+    );
+  }
+
+  /// 색상 버튼 행
+  Widget _buildColorButtons(Palette palette) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 120.0),
+      child: ColorButtonsRow(
+        colors: palette.colors,
+        onColorSelected: _onColorSelected,
+      ),
+    );
+  }
+
+  /// 결과 팝업 오버레이
+  Widget? _buildResultOverlay(StageData stage) {
+    if (_resultState == GameResultState.clear) {
+      return ClearResultOverlay(
+        stageNum: stage.stageNum,
+        maxMoves: stage.maxMoves,
+        remainingMoves: _remainingMoves,
+        earnedGold: _earnedGold,
+        onNextStage: _goToNextStage,
+        onRetry: _retryStage,
+      );
+    } else if (_resultState == GameResultState.gameOver) {
+      return GameOverResultOverlay(
+        stageNum: stage.stageNum,
+        maxMoves: stage.maxMoves,
+        remainingMoves: _remainingMoves,
+        onHome: _backToHome,
+        onRetry: _retryStage,
+        onContinue: _continueGame,
+      );
+    }
+    return null;
+  }
+
+  /// AppBar 아래, 게임 스크린 안으로 옮긴 상단 버튼들 (홈 / 설정 / 재시작)
+  Widget _buildTopButtons() {
+    return Positioned(
+      top: 4, // SafeArea + AppBar 아래 영역
+      left: 8,
+      right: 8,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // 홈 버튼
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white),
+            onPressed: _backToHome,
+          ),
+          // 설정 + 재시작
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.settings_outlined, color: Colors.white),
+                onPressed: () {
+                  // TODO: 설정 팝업 (여기서 언어 변경 + UserDataRepository.updateLanguage 호출 가능)
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                onPressed: _retryStage,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // -----------------------------
+  // build
+  // -----------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +434,9 @@ class _GameScreenState extends State<GameScreen> {
     if (_errorMessage != null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Error'),
+          backgroundColor: const Color(0xFF232323),
+          elevation: 0,
+          automaticallyImplyLeading: false,
         ),
         body: Center(
           child: Text('데이터 로딩 중 오류 발생:\n$_errorMessage'),
@@ -295,135 +447,35 @@ class _GameScreenState extends State<GameScreen> {
     final stage = _stage!;
     final palette = _palette!;
 
-    // 어떤 팝업을 띄울지 결정
-    Widget? resultOverlay;
-    if (_resultState == GameResultState.clear) {
-      resultOverlay = ClearResultOverlay(
-        stageNum: stage.stageNum,
-        maxMoves: stage.maxMoves,
-        remainingMoves: _remainingMoves,
-        earnedGold: _earnedGold,
-        onNextStage: _goToNextStage,
-        onRetry: _retryStage,
-      );
-    } else if (_resultState == GameResultState.gameOver) {
-      resultOverlay = GameOverResultOverlay(
-        stageNum: stage.stageNum,
-        maxMoves: stage.maxMoves,
-        remainingMoves: _remainingMoves,
-        onHome: _backToHome,
-        onRetry: _retryStage,
-        onContinue: _continueGame,
-      );
-    }
-
-    // 결과 팝업이 떠 있을 때는 AppBar 숨기기 (전면 가리개 느낌)
+    final resultOverlay = _buildResultOverlay(stage);
+    // 결과 팝업이 떠 있을 때는 AppBar 숨기기 (기존 동작 유지)
     final bool showAppBar = _resultState == GameResultState.none;
 
     return Scaffold(
       backgroundColor: const Color(0xFF232323),
-      appBar: showAppBar
-          ? AppBar(
-        backgroundColor: const Color(0xFF232323),
-        title: Text(
-            'Stage ${stage.stageNum}',
-            style: const TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.home),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // TODO: 설정 팝업 (여기서 언어 변경 + UserDataRepository.updateLanguage 호출 가능)
-            },
-            icon: const Icon(Icons.settings_outlined),
-          ),
-          IconButton(
-            onPressed: () {
-              // TODO: 재시작 확인 팝업과 연동 (지금은 바로 재시작)
-              _retryStage();
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
-      )
-          : null,
+      appBar: _buildAppBar(showAppBar),
       body: SafeArea(
         child: Stack(
           children: [
             // 실제 게임 내용
             Column(
               children: [
-                // 상단 정보 영역: 스테이지 + 남은 카운트
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Stage ${stage.stageNum}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.bolt_outlined, size: 20),
-                          const SizedBox(width: 6),
-                          Text(
-                            '$_remainingMoves / ${stage.maxMoves}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // 보드
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    child: GameBoard(
-                      board: _board,
-                      colors: palette.colors,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 12),
-
-                // 색상 버튼 행
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 60.0),
-                  child: ColorButtonsRow(
-                    colors: palette.colors,
-                    onColorSelected: _onColorSelected,
-                  ),
-                ),
+                _buildHeader(stage),
+                _buildBoard(palette),
+                _buildColorButtons(palette),
               ],
             ),
 
+            // AppBar 에 있던 버튼들을 게임 스크린 쪽으로 내린 것
+            _buildTopButtons(),
+
             // 전면 결과 팝업 오버레이 (성공/실패)
             if (resultOverlay != null) resultOverlay,
+
+            // 🎉 중앙에서 터지는 별 모양 컨페티 (분리된 위젯)
+            ClearConfettiWidget(
+              controller: _confettiController,
+            ),
           ],
         ),
       ),
