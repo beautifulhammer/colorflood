@@ -7,7 +7,8 @@ import '../data/palette_model.dart';
 import '../data/stage_model.dart';
 import '../ingame/game_screen.dart';
 import '../data/gold_indicator.dart'; // ✅ 골드 표시 공용 함수
-import '../home/widgets/start_button.dart'; // ✅ START 버튼 공용 위젯 (경로 변경)
+import '../home/widgets/start_button.dart'; // ✅ START 버튼 공용 위젯
+import '../home/popup/palette_book_page.dart'; // ✅ 팔레트 도감 전면 팝업
 
 /// Color Flood 메인 홈 화면
 ///
@@ -125,8 +126,13 @@ class _HomeScreenState extends State<HomeScreen> {
     await _refreshUserData();
   }
 
-  void _onTapPaletteBook() {
-    // TODO: 팔레트 도감 팝업/페이지 열기
+  Future<void> _onTapPaletteBook() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true, // ✅ 전면 팝업 느낌(상단 스와이프 등 플랫폼별 차이)
+        builder: (_) => PaletteBookPage(userData: _userData),
+      ),
+    );
   }
 
   void _onTapHelp() {
