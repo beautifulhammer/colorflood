@@ -13,7 +13,7 @@ import '../../data/user_data.dart';
 ///   - 썸네일: 6개의 직사각형 색상이 1줄(1x6)로 나열
 ///   - 썸네일 하단: 팔레트 이름 (en/ko/cn 번역 적용)
 ///   - 오픈된 팔레트만 색상 표시
-///   - 미오픈 팔레트는 회색 + 중앙 자물쇠
+///   - 미오픈 팔레트는 회색 + 중앙 자물쇠 + 해금 스테이지(예: 101 STAGE)
 ///
 /// 추가 UX
 /// - 스크롤로 상단 UI가 안 보이기 시작할 때(대략 10개 이상 내려갔을 때)
@@ -122,22 +122,14 @@ class _PaletteBookPageState extends State<PaletteBookPage> {
 
   /// ✅ 팔레트 오픈 개수 계산 (100 스테이지마다 1개 오픈)
   ///
-  /// 규칙:
   /// - stageNum = 1   -> 1개 오픈
   /// - stageNum = 101 -> 2개 오픈
   /// - stageNum = 201 -> 3개 오픈
-  ///
-  /// 여기서 stageNum은 "현재 도달한(혹은 다음에 플레이할) 스테이지" 기준이 자연스러워서,
-  /// userData.clearedStage를 기반으로 "다음 스테이지"를 현재 진행도로 간주:
-  ///   currentStage = max(1, clearedStage + 1)
   int _unlockedPaletteCount() {
     final cleared = widget.userData.clearedStage;
     final currentStage = (cleared <= 0) ? 1 : (cleared + 1);
 
-    // 1~100: 1개, 101~200: 2개, ...
     final count = 1 + ((currentStage - 1) ~/ 100);
-
-    // 팔레트 개수(최대 60개) 범위로 제한
     final maxCount = _palettes.isEmpty ? 60 : _palettes.length;
     return count.clamp(1, maxCount);
   }
@@ -145,6 +137,14 @@ class _PaletteBookPageState extends State<PaletteBookPage> {
   bool _isUnlocked(int index) {
     final unlockedCount = _unlockedPaletteCount();
     return index < unlockedCount;
+  }
+
+  /// ✅ index 기반 해금 스테이지 계산
+  /// - index 0 -> 1
+  /// - index 1 -> 101
+  /// - index 2 -> 201
+  int _unlockStageForIndex(int index) {
+    return 1 + (index * 100);
   }
 
   @override
@@ -204,6 +204,7 @@ class _PaletteBookPageState extends State<PaletteBookPage> {
                     itemBuilder: (context, index) {
                       final palette = _palettes[index];
                       final isUnlocked = _isUnlocked(index);
+                      final unlockStage = _unlockStageForIndex(index);
 
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 14),
@@ -211,6 +212,7 @@ class _PaletteBookPageState extends State<PaletteBookPage> {
                           palette: palette,
                           lang: lang,
                           isUnlocked: isUnlocked,
+                          unlockStage: unlockStage,
                         ),
                       );
                     },
@@ -278,11 +280,13 @@ class _PaletteListTile extends StatelessWidget {
   final _PaletteEntry palette;
   final String lang;
   final bool isUnlocked;
+  final int unlockStage;
 
   const _PaletteListTile({
     required this.palette,
     required this.lang,
     required this.isUnlocked,
+    required this.unlockStage,
   });
 
   @override
@@ -302,6 +306,7 @@ class _PaletteListTile extends StatelessWidget {
           _PaletteThumbBar(
             colors: palette.colors,
             isUnlocked: isUnlocked,
+            unlockStage: unlockStage,
             height: 26,
           ),
           const SizedBox(height: 14),
@@ -321,14 +326,19 @@ class _PaletteListTile extends StatelessWidget {
 }
 
 /// 6개의 직사각형 색상이 1줄(1x6)로 나열되는 썸네일
+///
+/// - unlocked: 6색 표시
+/// - locked: 회색 처리 + 중앙 자물쇠 + 해금 스테이지 텍스트
 class _PaletteThumbBar extends StatelessWidget {
   final List<Color> colors;
   final bool isUnlocked;
+  final int unlockStage;
   final double height;
 
   const _PaletteThumbBar({
     required this.colors,
     required this.isUnlocked,
+    required this.unlockStage,
     required this.height,
   });
 
@@ -354,6 +364,8 @@ class _PaletteThumbBar extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(child: bar),
+
+          // 테두리
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -362,18 +374,35 @@ class _PaletteThumbBar extends StatelessWidget {
               ),
             ),
           ),
+
           if (!isUnlocked)
             Center(
               child: Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.28),
-                  shape: BoxShape.circle,
+                  color: Colors.black.withOpacity(0.35),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white12),
                 ),
-                child: const Icon(
-                  Icons.lock,
-                  color: Colors.white,
-                  size: 16,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.lock,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '$unlockStage STAGE',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
