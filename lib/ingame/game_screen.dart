@@ -287,6 +287,7 @@ class _GameScreenState extends State<GameScreen> {
       backgroundColor: const Color(0xFF232323),
       elevation: 0,
       automaticallyImplyLeading: false,
+      toolbarHeight: 25,
     );
   }
 

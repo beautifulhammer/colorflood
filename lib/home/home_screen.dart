@@ -7,6 +7,7 @@ import '../data/palette_model.dart';
 import '../data/stage_model.dart';
 import '../ingame/game_screen.dart';
 import '../data/gold_indicator.dart'; // ✅ 골드 표시 공용 함수
+import '../home/widgets/start_button.dart'; // ✅ START 버튼 공용 위젯 (경로 변경)
 
 /// Color Flood 메인 홈 화면
 ///
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final goldTextStyle = const TextStyle(
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: FontWeight.w700,
       color: Colors.white,
     );
@@ -151,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: const Color(0xFF232323),
         elevation: 0,
         automaticallyImplyLeading: false,
+        toolbarHeight: 25,
       ),
       body: SafeArea(
         child: Column(
@@ -168,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   buildGoldIndicator(
                     gold: _userData.gold,
                     isRefreshing: _isRefreshing,
-                    iconSize: 20,
+                    iconSize: 30,
                     textStyle: goldTextStyle,
                   ),
 
@@ -180,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(
                           Icons.palette_outlined,
                           color: Colors.white,
+                          size: 28,
                         ),
                         tooltip: '팔레트 도감',
                       ),
@@ -188,6 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(
                           Icons.help_outline,
                           color: Colors.white,
+                          size: 28,
                         ),
                         tooltip: '도움말',
                       ),
@@ -196,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(
                           Icons.settings_outlined,
                           color: Colors.white,
+                          size: 28,
                         ),
                         tooltip: '설정',
                       ),
@@ -213,38 +218,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // START 버튼
-                    SizedBox(
-                      width: 220,
-                      height: 64,
-                      child: ElevatedButton(
-                        onPressed: _onTapStart,
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'START',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'STAGE $_nextStageToPlay',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    // ✅ START 버튼 (공용 위젯)
+                    StartButton(
+                      onTap: _onTapStart,
+                      stageText: 'STAGE $_nextStageToPlay',
                     ),
 
                     const SizedBox(height: 80),
@@ -255,14 +232,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(6, (index) {
-                            final color =
-                            (_nextPaletteColors != null &&
+                            final color = (_nextPaletteColors != null &&
                                 index < _nextPaletteColors!.length)
                                 ? _nextPaletteColors![index]
                                 : Colors.grey.shade300;
+
                             return Container(
-                              width: 40,
-                              height: 40,
+                              width: 46,
+                              height: 46,
                               margin:
                               const EdgeInsets.symmetric(horizontal: 4),
                               decoration: BoxDecoration(
