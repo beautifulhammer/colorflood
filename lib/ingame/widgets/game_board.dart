@@ -33,21 +33,28 @@ class GameBoard extends StatelessWidget {
         final double maxSide = constraints.biggest.shortestSide;
 
         // 한 칸의 크기를 "정수 픽셀"이 되도록 내림 처리
-        // 예: maxSide = 327.8, size = 7 → cellSize = floor(46.8) = 46
-        final double cellSize = (maxSide / size).floorToDouble().clamp(1.0, double.infinity);
+        final double cellSize =
+        (maxSide / size).floorToDouble().clamp(1.0, double.infinity);
 
         // 실제 보드가 차지할 전체 길이: 정수 픽셀 단위
         final double boardSide = cellSize * size;
 
+        // 테두리 설정
+        const double _borderWidth = 2.0;
+        const double _cornerRadius = 2.0;
+
         return Center(
           child: SizedBox(
-            width: boardSide,
-            height: boardSide,
+            // CustomPaint의 size 자체가 "테두리 포함 전체 크기"가 되도록 확보
+            width: boardSide + 2 * _borderWidth,
+            height: boardSide + 2 * _borderWidth,
             child: CustomPaint(
               painter: _GameBoardPainter(
                 board: board,
                 colors: colors,
                 cellSize: cellSize,
+                borderWidth: _borderWidth,
+                cornerRadius: _cornerRadius,
               ),
             ),
           ),
@@ -62,20 +69,51 @@ class _GameBoardPainter extends CustomPainter {
   final List<List<int>> board;
   final List<Color> colors;
   final double cellSize;
+  final double borderWidth;
+  final double cornerRadius;
 
   _GameBoardPainter({
     required this.board,
     required this.colors,
     required this.cellSize,
+    required this.borderWidth,
+    required this.cornerRadius,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-
     final int rows = board.length;
     if (rows == 0) return;
     final int cols = board[0].length;
+
+    // 보드가 실제로 그려질 “테두리 안쪽 영역”
+    final Rect innerRect = Rect.fromLTWH(
+      borderWidth,
+      borderWidth,
+      size.width - 2 * borderWidth,
+      size.height - 2 * borderWidth,
+    );
+
+    // 안쪽 라운드 반경(음수 방지)
+    final double innerRadius =
+    (cornerRadius - borderWidth).clamp(0.0, double.infinity);
+
+    // 1) 셀은 라운드 영역 안에서만 보이도록 클립
+    canvas.save();
+    canvas.clipRRect(
+      RRect.fromRectAndRadius(
+        innerRect,
+        Radius.circular(innerRadius),
+      ),
+    );
+
+    final Paint fillPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = false; // 틈 방지 목적(픽셀 경계에서 흐려지는 현상 감소)
+
+    // 2) 보드 셀 그리기 (borderWidth만큼 안쪽으로 오프셋)
+    //    - +0.5로 살짝 겹쳐 그려 1px 틈을 덮음
+    const double overlap = 0.5;
 
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
@@ -84,25 +122,47 @@ class _GameBoardPainter extends CustomPainter {
             ? colors[colorIndex]
             : Colors.black;
 
-        paint.color = tileColor;
+        fillPaint.color = tileColor;
 
-        // 셀의 좌측 상단 좌표
-        final double left = c * cellSize;
-        final double top = r * cellSize;
+        final double left = borderWidth + c * cellSize;
+        final double top = borderWidth + r * cellSize;
 
-        // 🔥 핵심 포인트:
-        // - 폭/높이에 +0.5 정도 덧붙여서 인접 셀과 살짝 겹치게 그림
-        //   → 부동 소수점 연산 때문에 생길 수 있는 1픽셀 틈까지 덮어버림
         final Rect rect = Rect.fromLTWH(
           left,
           top,
-          cellSize + 0.5,
-          cellSize + 0.5,
+          cellSize + overlap,
+          cellSize + overlap,
         );
 
-        canvas.drawRect(rect, paint);
+        canvas.drawRect(rect, fillPaint);
       }
     }
+
+    canvas.restore();
+
+    // 3) 마지막에 테두리(Stroke) 1번만 그려서 깔끔하게 마감
+    final Paint borderPaint = Paint()
+      ..color = Colors.grey.shade800
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth
+      ..isAntiAlias = true;
+
+    // stroke는 선 두께의 절반이 안/밖으로 퍼지므로,
+    // Rect를 borderWidth/2 만큼 안쪽으로 넣어줘야 잘리지 않음
+    final Rect borderRect = Rect.fromLTWH(
+      borderWidth / 2,
+      borderWidth / 2,
+      size.width - borderWidth,
+      size.height - borderWidth,
+    );
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        borderRect,
+        Radius.circular(cornerRadius),
+      ),
+      borderPaint,
+    );
   }
 
   @override

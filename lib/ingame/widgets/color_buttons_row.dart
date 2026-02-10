@@ -21,7 +21,7 @@ class _ColorButtonsRowState extends State<ColorButtonsRow> {
   final List<bool> _pressed = List.filled(6, false);
 
   /// 버튼 크기
-  static const double _buttonSize = 46.0;
+  static const double _buttonSize = 60.0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _ColorButtonsRowState extends State<ColorButtonsRow> {
         final gap = spacing.clamp(6.0, 40.0);
 
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(itemCount, (index) {
             final color = widget.colors[index];
             final isPressed = _pressed[index];
@@ -75,10 +75,10 @@ class _ColorButtonsRowState extends State<ColorButtonsRow> {
                   child: Container(
                     width: _buttonSize,
                     height: _buttonSize,
-                    decoration: BoxDecoration(
+                    decoration: ShapeDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
+                      shape: CircleBorder(),
+                      shadows: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.25),
                           blurRadius: 6,

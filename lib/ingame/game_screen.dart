@@ -344,7 +344,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Widget _buildColorButtons(Palette palette) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 120.0),
+      padding: const EdgeInsets.only(bottom: 200.0),
       child: ColorButtonsRow(
         colors: palette.colors,
         onColorSelected: _onColorSelected,
@@ -468,6 +468,7 @@ class _GameScreenState extends State<GameScreen> {
               children: [
                 _buildHeader(stage),
                 _buildBoard(palette),
+                const SizedBox(height: 24),
                 _buildColorButtons(palette),
               ],
             ),
