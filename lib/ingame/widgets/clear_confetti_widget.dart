@@ -1,6 +1,6 @@
 // lib/ingame/widgets/clear_confetti_widget.dart
 
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 
@@ -21,19 +21,19 @@ class ClearConfettiWidget extends StatelessWidget {
   Path _drawStar(Size size) {
     final Path path = Path();
 
-    // 원하는 고정 크기
-    const double outerRadius = 10;  // ⭐ 별 크기 (여기 값을 키우면 별 자체가 커짐)
+    // 별 크기 (조금 키워서 눈에 더 잘 띄게)
+    const double outerRadius = 12.0;
     const double innerRadius = outerRadius * 0.45;
 
     const int points = 5;
-    const double fullAngle = 2 * pi;
+    const double fullAngle = 2 * math.pi;
     final double step = fullAngle / (points * 2);
 
-    double angle = -pi / 2;
+    double angle = -math.pi / 2;
 
     path.moveTo(
-      outerRadius * cos(angle) + outerRadius,
-      outerRadius * sin(angle) + outerRadius,
+      outerRadius * math.cos(angle) + outerRadius,
+      outerRadius * math.sin(angle) + outerRadius,
     );
 
     for (int i = 1; i < points * 2; i++) {
@@ -42,8 +42,8 @@ class ClearConfettiWidget extends StatelessWidget {
 
       final double radius = isOuter ? outerRadius : innerRadius;
       path.lineTo(
-        outerRadius + radius * cos(angle),
-        outerRadius + radius * sin(angle),
+        outerRadius + radius * math.cos(angle),
+        outerRadius + radius * math.sin(angle),
       );
     }
 
@@ -53,19 +53,28 @@ class ClearConfettiWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      // 필요하면 Alignment.center 로 바꿔서 화면 중앙에서 쏠 수도 있음
-      alignment: Alignment.topCenter,
-      child: ConfettiWidget(
-        confettiController: controller,
-        blastDirectionality: BlastDirectionality.explosive,
-        shouldLoop: false,
-        emissionFrequency: 0.05,
-        numberOfParticles: 15,
-        maxBlastForce: 50,
-        minBlastForce: 2,
-        gravity: 0.1,
-        createParticlePath: _drawStar, // ⭐ 별 모양 파티클
+    // ✅ 화면 전체 캔버스 확보 + 상단 중앙에서 확실히 분사
+    return SizedBox.expand(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: ConfettiWidget(
+          confettiController: controller,
+
+          // 상단에서 "아래 방향"으로 기본 방향을 잡아줌 (explosive라도 체감이 커짐)
+          blastDirection: math.pi / 2,
+          blastDirectionality: BlastDirectionality.explosive,
+
+          shouldLoop: false,
+
+          // 조금 더 확실히 보이도록 조정
+          emissionFrequency: 0.06,
+          numberOfParticles: 25,
+          maxBlastForce: 35,
+          minBlastForce: 8,
+          gravity: 0.18,
+
+          createParticlePath: _drawStar,
+        ),
       ),
     );
   }
