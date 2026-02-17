@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../data/user_data.dart';
 import '../data/user_data_repository.dart';
-import '../data/game_data_loader.dart';
-import '../data/palette_model.dart';
-import '../data/stage_model.dart';
 import '../ingame/game_screen.dart';
 import '../data/gold_indicator.dart'; // ✅ 골드 표시 공용 함수
 import '../home/widgets/start_button.dart'; // ✅ START 버튼 공용 위젯
 import '../home/popup/palette_book_page.dart'; // ✅ 팔레트 도감 전면 팝업
+
+// ✅ (경로 변경) NextStagePaletteLoader
+import '../home/widgets/next_stage_palette_loader.dart';
 
 /// Color Flood 메인 홈 화면
 ///
@@ -82,35 +82,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return cleared + 1;
   }
 
-  /// 다음에 플레이할 스테이지의 팔레트 색상 불러오기
+  /// 다음에 플레이할 스테이지의 팔레트 색상 불러오기 (분리 로더 사용)
   Future<void> _loadNextStagePalette(int stageNum) async {
-    try {
-      await GameDataLoader.loadAll();
+    final colors = await NextStagePaletteLoader.loadColors(stageNum);
 
-      final StageData? stage = GameDataLoader.getStage(stageNum);
-      if (stage == null) {
-        setState(() {
-          _nextPaletteColors = null;
-        });
-        return;
-      }
+    if (!mounted) return;
 
-      final Palette? palette = GameDataLoader.getPalette(stage.paletteId);
-      if (palette == null) {
-        setState(() {
-          _nextPaletteColors = null;
-          return;
-        });
-      }
-
-      setState(() {
-        _nextPaletteColors = palette!.colors;
-      });
-    } catch (_) {
-      setState(() {
-        _nextPaletteColors = null;
-      });
-    }
+    setState(() {
+      _nextPaletteColors = colors;
+    });
   }
 
   Future<void> _onTapStart() async {
@@ -187,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: _onTapPaletteBook,
                         icon: const Icon(
                           Icons.palette_outlined,
-                          color: Colors.white,
+                          color: Color(0xFFFCA311),
                           size: 28,
                         ),
                         tooltip: '팔레트 도감',
@@ -196,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: _onTapHelp,
                         icon: const Icon(
                           Icons.help_outline,
-                          color: Colors.white,
+                          color: Color(0xFFFCA311),
                           size: 28,
                         ),
                         tooltip: '도움말',
@@ -205,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: _onTapSettings,
                         icon: const Icon(
                           Icons.settings_outlined,
-                          color: Colors.white,
+                          color: Color(0xFFFCA311),
                           size: 28,
                         ),
                         tooltip: '설정',
@@ -246,8 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Container(
                               width: 46,
                               height: 46,
-                              margin:
-                              const EdgeInsets.symmetric(horizontal: 4),
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
                               decoration: BoxDecoration(
                                 color: color,
                                 borderRadius: BorderRadius.circular(4),

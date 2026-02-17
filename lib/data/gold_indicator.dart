@@ -18,7 +18,7 @@ Widget buildGoldIndicator({
       const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w700,
-        color: Colors.white,
+        color: Color(0xFFFCA311),
       );
 
   return Row(

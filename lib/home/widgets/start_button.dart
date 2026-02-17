@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// 홈 화면에서 사용하는 START 버튼 공용 위젯
-///
-/// - 커스텀 그라데이션 + 2중 그림자
-/// - Material + InkWell
-/// - 눌림 효과: 살짝 아래로 이동 + 살짝 축소
 class StartButton extends StatefulWidget {
   final VoidCallback onTap;
   final String stageText;
 
-  /// 버튼 크기 커스터마이즈 가능
   final double width;
   final double height;
 
@@ -28,91 +22,144 @@ class StartButton extends StatefulWidget {
 class _StartButtonState extends State<StartButton> {
   bool _isPressed = false;
 
+  static const Color _mainColor = Color(0xFF14213D);
+  static const Color _subColor = Color(0xFFFCA311);
+  static const Color _lightGray = Color(0xFFE5E5E5);
+
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(32);
+    final radius = BorderRadius.circular(28);
+    final double depth = _isPressed ? 0.6 : 1.0;
 
     return AnimatedScale(
       duration: const Duration(milliseconds: 90),
       curve: Curves.easeOut,
-      scale: _isPressed ? 0.98 : 1.0,
+      scale: _isPressed ? 0.975 : 1.0,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 90),
         curve: Curves.easeOut,
-        transform: Matrix4.translationValues(0, _isPressed ? 3.0 : 0.0, 0),
+        transform: Matrix4.translationValues(
+          0,
+          _isPressed ? 3.0 : 0.0,
+          0,
+        ),
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              Colors.grey.shade400,
-              Colors.grey.shade600,
-              Colors.grey.shade800,
+              _mainColor,
+              _mainColor.withOpacity(0.92),
+              _mainColor,
             ],
+            stops: const [0.0, 0.55, 1.0],
           ),
           borderRadius: radius,
           border: Border.all(
-            color: Colors.grey.shade200,
-            width: 1,
+            color: _subColor.withOpacity(0.75),
+            width: 1.6,
           ),
           boxShadow: [
-            // 아래 그림자 (깊은 그림자)
+            // 바닥 깊이 그림자
             BoxShadow(
-              color: Colors.grey.shade900.withOpacity(0.5),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-              spreadRadius: -2,
+              color: Colors.black.withOpacity(0.55 * depth),
+              blurRadius: 18,
+              offset: const Offset(0, 12),
             ),
-            // 위 하이라이트 효과
+            // 상단 은은한 하이라이트
             BoxShadow(
-              color: Colors.white.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, -4),
-              spreadRadius: -2,
+              color: _lightGray.withOpacity(0.10 * depth),
+              blurRadius: 10,
+              offset: const Offset(0, -6),
+              spreadRadius: -6,
             ),
           ],
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: widget.onTap,
-            onHighlightChanged: (isDown) {
-              if (!mounted) return;
-              setState(() => _isPressed = isDown);
-            },
-            borderRadius: radius,
-            splashColor: Colors.white.withOpacity(0.2),
-            highlightColor: Colors.white.withOpacity(0.1),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'START',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black26,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
+        child: ClipRRect(
+          borderRadius: radius,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onTap,
+              onHighlightChanged: (isDown) {
+                if (!mounted) return;
+                setState(() => _isPressed = isDown);
+              },
+              borderRadius: radius,
+              splashColor: _subColor.withOpacity(0.18),
+              highlightColor: _subColor.withOpacity(0.10),
+              child: Stack(
+                children: [
+                  // 내측 엣지 라인
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: radius,
+                          border: Border.all(
+                            color: _lightGray.withOpacity(0.08 * depth),
+                            width: 1,
+                          ),
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  widget.stageText,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+
+                  // 상단 글로시 효과
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    height: widget.height * 0.42,
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
+                            top: radius.topLeft,
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              _lightGray.withOpacity(0.08 * depth),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+
+                  // 텍스트 영역
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'START',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFFFCA311),
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          widget.stageText,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFFCA311),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
