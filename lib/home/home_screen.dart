@@ -3,20 +3,11 @@ import 'package:flutter/material.dart';
 import '../data/user_data.dart';
 import '../data/user_data_repository.dart';
 import '../ingame/game_screen.dart';
-import '../data/gold_indicator.dart'; // ✅ 골드 표시 공용 함수
-import '../home/widgets/start_button.dart'; // ✅ START 버튼 공용 위젯
-import '../home/popup/palette_book_page.dart'; // ✅ 팔레트 도감 전면 팝업
-
-// ✅ (경로 변경) NextStagePaletteLoader
+import '../data/gold_indicator.dart';
+import '../home/widgets/start_button.dart';
+import '../home/popup/palette_book_page.dart';
 import '../home/widgets/next_stage_palette_loader.dart';
 
-/// Color Flood 메인 홈 화면
-///
-/// - (빈 AppBar: 노치 영역 확보용)
-/// - body 상단: 골드 / 도감 / 도움말 / 설정 버튼
-/// - 중앙: START 버튼 (다음 스테이지로 게임 시작)
-/// - START 하단: 다음 스테이지에서 사용할 팔레트 미리보기
-/// - 하단: 배너 광고 영역(플레이스홀더)
 class HomeScreen extends StatefulWidget {
   final UserData userData;
 
@@ -33,64 +24,50 @@ class _HomeScreenState extends State<HomeScreen> {
   late UserData _userData;
   bool _isRefreshing = false;
 
-  /// 다음에 플레이할 스테이지의 팔레트 색상 목록 (6개)
   List<Color>? _nextPaletteColors;
 
   final _userRepo = UserDataRepository.instance;
+
+  // 🎨 Global Color System
+  static const Color _bgColor = Color(0xFF232323);
+  static const Color _deepBlack = Color(0xFF0F0F0F);
+  static const Color _gold = Color(0xFFD4AF37);
+  static const Color _lightText = Color(0xFFF5F5F5);
 
   @override
   void initState() {
     super.initState();
     _userData = widget.userData;
-
-    // 앱 실행 직후 서버 기준 최신값으로 한 번 동기화
     _refreshUserData();
-
-    // 초기 상태에서도 팔레트 로딩 시도
     _loadNextStagePalette(_nextStageToPlay);
   }
 
-  /// 서버 기준 유저 데이터 새로고침
   Future<void> _refreshUserData() async {
-    setState(() {
-      _isRefreshing = true;
-    });
+    setState(() => _isRefreshing = true);
+
     try {
       final updated = await _userRepo.refresh(_userData.uid);
-      setState(() {
-        _userData = updated;
-      });
-
-      // 유저 데이터가 갱신되면, 다음 스테이지 팔레트도 다시 로드
+      setState(() => _userData = updated);
       await _loadNextStagePalette(_nextStageToPlay);
     } catch (_) {
-      // 에러는 조용히 무시 (오프라인 등)
+      // ignore
     } finally {
       if (mounted) {
-        setState(() {
-          _isRefreshing = false;
-        });
+        setState(() => _isRefreshing = false);
       }
     }
   }
 
-  /// 다음 스테이지 번호 계산
-  /// - 클리어한 최고 스테이지가 0이면 → 1부터 시작
   int get _nextStageToPlay {
     final cleared = _userData.clearedStage;
     if (cleared <= 0) return 1;
     return cleared + 1;
   }
 
-  /// 다음에 플레이할 스테이지의 팔레트 색상 불러오기 (분리 로더 사용)
   Future<void> _loadNextStagePalette(int stageNum) async {
     final colors = await NextStagePaletteLoader.loadColors(stageNum);
-
     if (!mounted) return;
-
-    setState(() {
-      _nextPaletteColors = colors;
-    });
+    setState(() => _nextPaletteColors = colors);
   }
 
   Future<void> _onTapStart() async {
@@ -102,40 +79,33 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    // 게임을 하고 돌아오면 유저 데이터 다시 갱신
     await _refreshUserData();
   }
 
   Future<void> _onTapPaletteBook() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        fullscreenDialog: true, // ✅ 전면 팝업 느낌(상단 스와이프 등 플랫폼별 차이)
+        fullscreenDialog: true,
         builder: (_) => PaletteBookPage(userData: _userData),
       ),
     );
   }
 
-  void _onTapHelp() {
-    // TODO: 도움말 팝업 열기
-  }
-
-  void _onTapSettings() {
-    // TODO: 설정 팝업 (언어 변경 + UserDataRepository.updateLanguage 등)
-  }
+  void _onTapHelp() {}
+  void _onTapSettings() {}
 
   @override
   Widget build(BuildContext context) {
     final goldTextStyle = const TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w700,
-      color: Colors.white,
+      color: _lightText,
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFF232323),
-      // ✅ 빈 AppBar: 노치/상단 영역 확보용
+      backgroundColor: _bgColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF232323),
+        backgroundColor: _bgColor,
         elevation: 0,
         automaticallyImplyLeading: false,
         toolbarHeight: 25,
@@ -143,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // 상단 골드 + 아이콘 영역
+            // 🔹 상단 영역
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -152,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // 좌측: 골드 표시 (공용 함수 사용)
                   buildGoldIndicator(
                     gold: _userData.gold,
                     isRefreshing: _isRefreshing,
@@ -160,35 +129,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     textStyle: goldTextStyle,
                   ),
 
-                  // 우측: 도감 / 도움말 / 설정 아이콘
                   Row(
                     children: [
                       IconButton(
                         onPressed: _onTapPaletteBook,
                         icon: const Icon(
                           Icons.palette_outlined,
-                          color: Color(0xFFFCA311),
+                          color: Color(0xFFFFF8EA),
                           size: 28,
                         ),
-                        tooltip: '팔레트 도감',
                       ),
                       IconButton(
                         onPressed: _onTapHelp,
                         icon: const Icon(
                           Icons.help_outline,
-                          color: Color(0xFFFCA311),
+                          color: Color(0xFFFFF8EA),
                           size: 28,
                         ),
-                        tooltip: '도움말',
                       ),
                       IconButton(
                         onPressed: _onTapSettings,
                         icon: const Icon(
                           Icons.settings_outlined,
-                          color: Color(0xFFFCA311),
+                          color: Color(0xFFFFF8EA),
                           size: 28,
                         ),
-                        tooltip: '설정',
                       ),
                     ],
                   ),
@@ -196,66 +161,69 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            const SizedBox(height: 180),
+            const SizedBox(height: 160),
 
-            // 중앙 컨텐츠
+            // 🔹 중앙
             Expanded(
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // ✅ START 버튼 (공용 위젯)
                     StartButton(
                       onTap: _onTapStart,
                       stageText: 'STAGE $_nextStageToPlay',
                     ),
 
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 70),
 
-                    // 팔레트 미리보기
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(6, (index) {
-                            final color = (_nextPaletteColors != null &&
-                                index < _nextPaletteColors!.length)
-                                ? _nextPaletteColors![index]
-                                : Colors.grey.shade300;
+                    // 🔹 팔레트 미리보기
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(6, (index) {
+                        final color = (_nextPaletteColors != null &&
+                            index < _nextPaletteColors!.length)
+                            ? _nextPaletteColors![index]
+                            : _deepBlack;
 
-                            return Container(
-                              width: 46,
-                              height: 46,
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              decoration: BoxDecoration(
-                                color: color,
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black12,
-                                  width: 0.5,
-                                ),
+                        return Container(
+                          width: 46,
+                          height: 46,
+                          margin:
+                          const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: _gold.withOpacity(0.4),
+                              width: 0.8,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.5),
+                                blurRadius: 6,
+                                offset: const Offset(0, 4),
                               ),
-                            );
-                          }),
-                        ),
-                      ],
+                            ],
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),
               ),
             ),
 
-            // 하단 배너 영역 (플레이스홀더)
+            // 🔹 하단 배너 영역
             Container(
               height: 56,
               width: double.infinity,
-              color: Colors.grey.shade200,
+              color: _deepBlack,
               alignment: Alignment.center,
               child: const Text(
                 'Banner Ad Area',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.black54,
+                  color: _lightText,
                 ),
               ),
             ),
